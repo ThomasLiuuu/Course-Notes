@@ -1,0 +1,929 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,enumerate,nicefrac,fancyhdr,hyperref,graphicx,adjustbox}
+\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
+\usepackage[left=2.6cm, right=2.6cm, top=1.5cm, includehead, includefoot]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[d]{esvect}
+
+%% commands
+%% useful macros [add to them as needed]
+% sets
+\newcommand{\C}{{\mathbb{C}}} 
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\F}{{\mathbb{F}}}
+
+% bases
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mB}{\mathcal{B}}
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mE}{\mathcal{E}}
+\newcommand{\mL}{\mathcal{L}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mO}{\mathcal{O}}
+\newcommand{\mP}{\mathcal{P}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mT}{\mathcal{T}}
+
+% linear algebra
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\adj}{\operatorname{adj}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\spn}{\operatorname{Span}}
+\newcommand{\proj}{\operatorname{proj}}
+\newcommand{\prp}{\operatorname{perp}}
+\newcommand{\refl}{\operatorname{refl}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\nul}{\operatorname{Null}}
+\newcommand{\nully}{\operatorname{nullity}}
+\newcommand{\range}{\operatorname{Range}}
+\renewcommand{\ker}{\operatorname{Ker}}
+\newcommand{\col}{\operatorname{Col}}
+\newcommand{\row}{\operatorname{Row}}
+\newcommand{\cof}{\operatorname{cof}}
+\newcommand{\Num}{\operatorname{Num}}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\ipb}{\langle \thinspace, \rangle}
+\newcommand{\ip}[2]{\left\langle #1, #2\right\rangle} % inner products
+\newcommand{\M}[2]{M_{#1\times #2}(\F)}
+\newcommand{\RREF}{\operatorname{RREF}}
+\newcommand{\cv}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+\newenvironment{amatrix}[1]{\left[\begin{array}{@{}*{\numexpr#1-1}{c}|c@{}}}{\end{array}\right]}
+\newcommand{\am}[2]{\begin{amatrix}{#1} #2 \end{amatrix}}
+
+% vectors
+\newcommand{\vzero}{\vv{0}}
+\newcommand{\va}{\vv{a}}
+\newcommand{\vb}{\vv{b}}
+\newcommand{\vc}{\vv{c}}
+\newcommand{\vd}{\vv{d}}
+\newcommand{\ve}{\vv{e}}
+\newcommand{\vf}{\vv{f}}
+\newcommand{\vg}{\vv{g}}
+\newcommand{\vh}{\vv{h}}
+\newcommand{\vl}{\vv{\ell}}
+\newcommand{\vm}{\vv{m}}
+\newcommand{\vn}{\vv{n}}
+\newcommand{\vp}{\vv{p}}
+\newcommand{\vq}{\vv{q}}
+\newcommand{\vr}{\vv{r}}
+\newcommand{\vs}{\vv{s}}
+\newcommand{\vt}{\vv{t}}
+\newcommand{\vu}{\vv{u}}
+\newcommand{\vvv}{{\vv{v}}}
+\newcommand{\vw}{\vv{w}}
+\newcommand{\vx}{\vv{x}}
+\newcommand{\vy}{\vv{y}}
+\newcommand{\vz}{\vv{z}}
+
+% display
+\newcommand{\ds}{\displaystyle}
+\newcommand{\qand}{\quad\text{and}}
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\hint}{\textbf{Hint: }}
+\newcommand{\tri}{\triangle}
+
+% misc
+\newcommand{\area}{\operatorname{area}}
+\newcommand{\vol}{\operatorname{vol}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\rc}{\red{\checkmark}}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{commentcolor}{rgb}{0.3,0.3,0.3}
+\definecolor{keywordcolor}{rgb}{0.1,0.1,0.8}
+\definecolor{stringcolor}{rgb}{0.58,0,0.82}
+
+\lstset{
+  language=R,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue},
+  commentstyle=\color{commentcolor}\itshape,
+  stringstyle=\color{stringcolor},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=5pt,
+  backgroundcolor=\color{white},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  frame=none,
+  tabsize=2,
+  captionpos=b,
+  breaklines=true,
+  breakatwhitespace=false,
+  escapeinside={(*@}{@*)}
+}
+
+\title{STAT 341 Notes}
+\author{Thomas Liu}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\newpage 
+\section{Introduction}
+\subsection{The Statistical Narrative}
+We direct attention towards populations,
+\begin{itemize}
+    \item the units which define them 
+    \item variates as measures on the units 
+\end{itemize}
+All genuine populations are finite
+\subsection{Population Attributes}
+Summaries of finite populations (population attributes)
+\begin{itemize}
+    \item Define attributes of interest will rely on statistical concepts
+    \item Population attributes might involve considerable calculation
+    \item No Probability appears for some time as we have the entire population 
+    \item Estimate algorithms appear any samples are obtained
+\end{itemize}
+\subsection{Sample}
+All possibe samples 
+\begin{itemize}
+    \item are explored and characteristics of various population attributes examined within this context
+    \item This is done without probability 
+\end{itemize}
+All possible samples entail a combinatorial explosion for calculation 
+\begin{itemize}
+    \item the notion of selecting s subset of the samples is introduced
+    \item Probability is used for the selection of a sample froom all possible samples 
+\end{itemize}
+\subsection{Prediction}
+\begin{itemize}
+    \item Interest lies in predicting the value of a variate (the response variate) given the value of some explanatory variates 
+    \item Build a response model that encodes how that prediction is to be carried out 
+    \item How should the accuracy be measured?
+    \begin{itemize}
+        \item Bias-variance tradeoff 
+        \item training and test and cross-validation 
+    \end{itemize}
+\end{itemize}
+\newpage 
+
+\section{Populations}
+\subsection{Populations}
+A population is a finite (though possibly huge) set $\mathcal{P}$ of elements
+\begin{itemize}
+    \item Elements of a population are called unites $u\in\mathcal{P}$
+    \item Variates are functions $x(u), y(u)$, etc. on the which individual unites $u\in\mathcal{P}$. For simplicity we will more often use the notation $x_u$, $y_u$, etc. when referring to the realized values of these variates for the unit $u=1,\cdots,N$ 
+\end{itemize}
+Population attributes, denoted as $a(\mathcal{P})$. In particular, we will 
+\begin{itemize}
+    \item Define them 
+    \item Consider how to calculate them 
+    \item Evaluate some of their (non-sampling) properties, e.g. interpretation of the characteristic being captured, sensitivity to outlying points, etc. 
+\end{itemize}
+\subsection{Explicitly Defined Population Attributes}
+The population is typically a set or collection of units, each with one or more variate that we can measure 
+\subsubsection{Population Attributes}
+\subsubsection*{Variates}
+Variates are characteristics of each unit in the population, and they can take on numerical or categorical values 
+\begin{itemize}
+    \item The values of variates typically differ from unit to unit 
+    \item If we are only interested in the variate $y$'s we might write the population as \[\mathcal{P}=\{y_1,y_2,\cdots,y_N\}\]
+\end{itemize}
+\subsubsection*{Population Attributes}
+Population attributes are summaries describing characteristics of the population 
+\begin{itemize}
+    \item An attribute is a function applied to the entire population and determined by the variate values observed for each of the population's units \[a(\mathcal{P})=f(y_1,y_2,\cdots,y_N)\]
+    \item Some examples of attributes are:
+    \begin{itemize}
+        \item the population total: \[a(\mathcal{P})=\sum_{u\in\mathcal{P}}y_u\]   
+        \item various counts over the population: \[a(\mathcal{P})=\sum_{u\in\mathcal{P}}I_A(y_u)\] where $I_A(y)$ is the indicator function 
+        \begin{align*}
+            I_A(y) = \begin{cases}
+                1 & \text{if } y\in A \\
+                0 & \text{otherwise}
+            \end{cases}
+        \end{align*}
+    \end{itemize}
+\end{itemize}
+\subsubsection*{Location Attributes}
+These attributes measure or describe the centre of the distribution of variate values in a dataset
+\begin{itemize}
+    \item population average/mean: \[a(\mathcal{P})=\overline{y}=\frac{1}{N}\sum_{u\in\mathcal{P}}y_u\]
+    \item population proportion: \[a(\mathcal{P})=\frac{1}{N}\sum_{u\in\mathcal{P}}I_A(y_u)\]
+    \item Others include mode, median, etc.
+\end{itemize}
+\subsubsection*{Spread Attributes}
+These attributes measure variability or spread of the variate values in a data set
+\begin{itemize}
+    \item population variance: \[a(\mathcal{P})=\frac{1}{N}\sum_{u\in\mathcal{P}}(y_u-\overline{y})^2\]
+    \item population standard deviation: \[a(\mathcal{P})=SD_\mathcal{P}(y)=\sqrt{\frac{1}{N}\sum_{u\in\mathcal{P}}(y_u-\overline{y})^2}\]
+    \item coefficient of variation: \[a(\mathcal{P})=\dfrac{SD_\mathcal{P}(y)}{\overline{y}}\]    
+    \item Note: population variance or standard deviation could also be defined using $N-1$ in the denominator
+    \item Others include range, inter-quartile range, etc.
+\end{itemize}
+\subsubsection*{Order Statistics}
+Population attributes can also be based on an indexed collection of values 
+\[y_{(1)}\leq y_{(2)}\leq \cdots \leq y_{(N)}\]
+whihch are the variates values $y_u\in\mathcal{P}$ ordered from smallest to largest (including ties)
+\subsubsection*{Location Attributes Based on Order Statistics}
+\begin{itemize}
+    \item population minimum: \[a(\mathcal{P})=\underset{u\in\mathcal{P}}{min}y_u=y_{(1)}\]
+    \item population maximum: \[a(\mathcal{P})=\underset{u\in\mathcal{P}}{max}y_u=y_{(N)}\]
+    \item population mid range: \[a(\mathcal{P})=\frac{y_{(1)}+y_{(N)}}{2}\]
+    \item population median: \[a(\mathcal{P})=\begin{cases}
+        \frac{y_{(N/2)}+y_{(N/2+1)}}{2} & \text{if } N \text{ is even} \\
+        y_{((N+1)/2)} & \text{if } N \text{ is odd}
+    \end{cases}\]
+    \item population quartiles:
+    \begin{itemize}
+        \item $Q_1$ is 25th percentile, or the first quantile 
+        \item $Q_2$ is 50th percentile, or the second quantile (median)
+        \item $Q_3$ is 75th percentile, or the third quantile
+    \end{itemize}
+\end{itemize}
+\subsubsection*{Variability Attributes Based on Order Statistics}
+\begin{itemize}
+    \item population range: \[a(\mathcal{P})=y_{(N)}-y_{(1)}\]
+    \item population inter-quantile range IQR: \[a(\mathcal{P})=Q_3-Q_1\]
+    \item Mdeian Absolute Deviation (MAD) is the median of the absolute differences between eahc $y_u$ and the median \[a(\mathcal{P}) = \underset{u\in\mathcal{P}}{median}|y_u-\underset{u\in\mathcal{P}}{median}y_u|\]
+\end{itemize}
+\subsubsection*{Skewness Attributes}
+THese are measures of asymmetry in a population. A symmetric distribution of population values should result in a skewness attribute of zero
+\begin{itemize}
+    \item Pearson's moment coefficient of Skewness: \[a(\mathcal{P}) = \frac{\frac{1}{N}\sum_{u\in\mathcal{P}}(y_u-\overline{y})^3}{[SD_\mathcal{P}(y)]^3}\]    
+    \item Pearson's second skewness coefficient (median skewness) given by \[a(\mathcal{P}) = 3\times\frac{(\overline{y}-\underset{u\in\mathcal{P}}{median}y_u)}{SD_\mathcal{P}(y)}\]
+    \item Bowley's measure of skewness based on the quartiles \[a(\mathcal{P}) = \frac{(Q_3+Q_1)/2-Q_2}{(Q_3-Q_1)/2}\]
+\end{itemize}
+\subsubsection*{NAs in R}
+Many programs in R accommodate missing data (represented as \textbf{NA}s) 
+\begin{itemize}
+    \item We can choose to simply omit \textbf{NA}s, we can use the \texttt{na.omit()} function 
+\end{itemize}
+\subsubsection{Attributes Properties}
+\subsubsection*{Location Invariance and Equivariance}
+For an attribute $a(\mathcal{P}) = a(y_1,\cdots,y_N)$ we say that for any $m>0$ and $b\in\R$, that the attribute is 
+\begin{itemize}
+    \item location invariant if \[a(y_1+b,\cdots,y_N+b)=a(y_1,\cdots,y_N)\]
+    \item location equivariant if \[a(my_1+b,\cdots,my_N+b)=ma(y_1,\cdots,y_N)+b\]
+\end{itemize} 
+Population average is location equivariant 
+\subsubsection*{Scale Invariance and Equivariance}
+For an attribute $a(\mathcal{P}) = a(y_1,\cdots,y_N)$ we say that for any $m>0$ and $b\in\R$, that the attribute is
+\begin{itemize}
+    \item scale invariant if \[a(m\times y_1,\cdots,m\times y_N)=a(y_1,\cdots,y_N)\]
+    \item scale equivariant if \[a(m\times y_1,\cdots,m\times y_N)=m\times a(y_1,\cdots,y_N)\]
+    \item location-scale invariant if it is both location invariant and scale invariant \[a(m\times y_1+b,\cdots,m\times y_N+b)=a(y_1,\cdots,y_N)\]
+    \item location-scale equivariant if it is both location equivariant and scale equivariant \[a(m\times y_1+b,\cdots,m\times y_N+b)=m\times a(y_1,\cdots,y_N)+b\]
+\end{itemize}
+Population variance is location-scale equivariant
+\subsubsection*{Replication}
+The attribute $a(\mathcal{P})$ is 
+\begin{itemize}
+    \item replication invariant whenever \[a(\mathcal{P}^k)=a(\mathcal{P})\] 
+    \item replication equivariant whenever \[a(\mathcal{P}^k)=k\times a(\mathcal{P})\]
+\end{itemize}
+Population average is replication invariant 
+\subsubsection{Influence, Sensitivity Curves, and Breakdown Points}
+\subsubsection*{Influence}
+If we remove variate $y_u$ then the influence of that variate on the population attribute is quantified by 
+\[\tri(a,u)=a(y_1,\cdots,y_{u-1},y_u,y_{u+1},\cdots,y_N)-a(y_1,\cdots,y_{u-1},y_{u+1},\cdots,y_N)\]
+Ideally, no signle unit's value should have greater influence than others
+\subsubsection*{Sensitivity Curves}   
+We can examine the effect on an attribute when we add a variate. To examine the effect,
+\begin{itemize}
+    \item suppose we have a population of size $N-1$ 
+    \item add a variate with the value $y$
+    \item new population with $N$ elements is $\{y_1,\cdots,y_{N-1},y\}$
+\end{itemize}
+Define the sensitivity curve of an attribute as 
+\[SC(y;a(\mathcal{P})) = N[a(y_1,\cdots,y_{N-1},y)-a(y_1,\cdots,y_{N-1})]\]
+General sensitivity curve function in R can be defined as 
+\begin{verbatim}
+    sc = function(y.pop, y, attr, ...) {
+        N <- length(y.pop) + 1
+        sapply( y, function(y.new) {
+            N * attr(c(y.new, y.pop), ...) - N * attr(y.pop, ...)
+        })
+    }
+\end{verbatim}
+\subsubsection*{Breakdown Points}
+Gives an assessment of jusst how large a proportion of the data must be contaminated before the statistic breaks down (becomes useless) \\
+The breakdown point of a statistic is the smallest possible fraction of the observations that can be changed to somethings very extreme to make the error large (infinite) \\
+Attributes with high breakdown points are called resistant or robust 
+\subsubsection{Graphical Attributes}
+\subsubsection*{Histograms}
+Helps determine how the values are concentrated \\
+We can define bins in two ways 
+\begin{itemize}
+    \item bins of equal size 
+    \item bins with equal number of elements but varying size 
+\end{itemize}
+\subsubsection*{Rules for Number of Bins}
+\begin{itemize}
+    \item Sturges' rule: \[\text{Number of bins} = \lceil \log_2(N) + 1\rceil\]
+    \item Freedman-Diaconis rule: \[\text{Bin size} = 2\times\frac{IQR}{N^{1/3}}\]
+    \item Scott's rule: \[\text{Bin size} = 3.5\times\frac{SD}{N^{1/3}}\]
+\end{itemize}
+\subsubsection*{Scatter-Plots}
+Used to see whether two variates $x$ and $y$ are related in some way 
+\subsubsection{Power Transformations}
+For variates $y$, sometimes can be helpful to re-express the values in a non-linear way (with transformation $T(y)$) so that they are easier to define, understand, or simply to determine \\
+A commonly used transformation when $y>0$ is power transformation, which is indexed by a power $\alpha$. The general form is 
+\begin{align*}
+    T_\alpha(y) &=
+    \begin{cases}
+        y^\alpha &\alpha\neq 0 \\
+        \log(y) &\alpha=0
+    \end{cases}
+\end{align*}
+There transformations are monotonic 
+\[y_u<y_v\iff T_\alpha(y_u)<T_\alpha(y_v)\]
+What changes, often dramatically, is the relative positions of the variate values \\
+The most common purpose of a transformation is to change the shape of the histogram so that it is more symmetric 
+Another power transformation is 
+\begin{align*}
+    T_\alpha(y) &=
+    \begin{cases}
+        y^\alpha &\alpha>0 \\
+        \log(y) &\alpha=0 \\
+        -(y)^\alpha &\alpha<0
+    \end{cases}
+\end{align*}
+\subsubsection*{Bump Rule 1: Making Histograms More Symmetric}
+\begin{itemize}
+    \item If the bump is on "lower" values, then move the power "lower" on the ladder 
+    \item If the bump is on "higher" values, then move the power "higher" on the ladder 
+\end{itemize}
+\subsubsection*{Bump Rule 2: Straightening Scatter-Plots}
+Since use of power transformations on both $x$ and $y$, we will have two different ladders of transformations 
+\begin{itemize}
+    \item $x$ ladder 
+    \item $y$ ladder 
+\end{itemize}
+\begin{figure}[tbhp]
+	\begin{center}
+		\includegraphics[width=0.6\textwidth]{scatter plot.png}
+	\end{center}
+\end{figure}
+\newpage 
+\subsubsection{Order, Rank, and Quantiles}
+Recall the order statistics:
+\[y_{(1)}\leq y_{(2)}\leq \cdots \leq y_{(N)}\]
+which are the ordered values (including ties) of the variate values $y_u\in\mathcal{P}$ \\
+The rank statistics (index of $y_i$)
+\[r_1,r_2,\cdots,r_N\]
+which are the ranks of the variate values $y_1,y_2,\cdots,y_N$ from the $y_u\in\mathcal{P}$ 
+\subsubsection*{Quantiles}
+\begin{itemize}
+    \item $p\in\{\frac{1}{N}, \frac{2}{N}, \cdots, 1\}$ and 
+    \item $Q_y(p)$ is the $p$-th quantile of $y$ \[Q_y(p)=y_{(N\times p)}\] is called the quantile function of $y$ for all $p\in[\frac{1}{N}, 1]$
+    \item the quantile $Q_y(p)$ for any $p$ locates the variate valuues in the population, and is thus a measure of location 
+    \item most (but not all) location measures try to capture central tendency 
+\end{itemize}
+\subsubsection*{Quantiles that Measure Center}
+\begin{itemize}
+    \item the median: $Q_y(1/2)$ 
+    \item the mid-hinge (average of the first and third quantiles): $\dfrac{Q_y(1/4)+Q_y(3/4)}{2}$
+    \item the mid range (average of the minimum and maximum): $\dfrac{Q_y(1/N)+Q_y(1)}{2}$
+    \item the trimean: $\dfrac{Q_y(1/4)+2\times Q_y(1/2)+Q_y(3/4)}{4}$
+\end{itemize}
+\subsubsection*{Quantiles that Measure Spread}
+The quantile function can be used to provide some natural measures of spread for the variate $y$:
+\begin{itemize}
+    \item the range: $Q_y(1)-Q_y(1/N)$
+    \item the inter-quantile rnage: $IQR_y=Q_y(3/4)-Q_y(1/4)$
+    \item the central $100\times p\%$ range
+    \item the difference between any two quantiles might be divided by the difference in the corresponding $p$ values, which is the slope 
+\end{itemize}
+\subsubsection*{Concentration in Quantiles Plots}
+We draw boxes of fixed height to see how many elements are within the box $\Rightarrow$ how concentration changes with $p$
+\subsection{Implicit Attributes}
+\subsubsection{The Minimum of a Function}
+We want the value $\hat{\theta}$ which satisfies 
+\[\hat{\theta} = \underset{\theta}{argmin} \quad \rho(\theta;\mathcal{P})\]
+where the possible values of $\theta$ may be constrained to be in some set $\Theta$
+The maximizing function is the same as minimizing the negation, so we only need to consider minimization \\
+The most common form for $\rho(\theta,\mathcal{P})$ is a sum of functions $\rho(\theta,u)$ evaluated at each unit $u\in\mathcal{P}$
+\[\rho(\theta,\mathcal{P}) = \sum_{u\in\mathcal{P}}\rho(\theta,u)\]
+\subsubsection{Dealing with Influential Units in Linear Regression}
+By applying power transformations to the variates, we can see variates that do not behave as the others do. It is likely 
+that these will have a large influence on the fitted regression line \\
+Thus we can either
+\begin{itemize}
+    \item remove the units
+    \item assign weights to the observations according to their variation 
+    \item use a method to find the regression line which is robust to potential outliers
+\end{itemize}
+\subsubsection*{Weighted Linear Regression}
+In weighted linear regression (WLS), the fitted line minimizes the following objective function 
+\[(\hat{\alpha},\hat{\beta}) = \underset{\alpha,\beta}{argmin} \quad \sum_{u\in\mathcal{P}}w_u(y_u-\alpha-\beta (x_u - c))^2\]
+We assume the weight $w_u$ are known \\
+It is common to either set $c=0$ or define $c$ to be the weighted average of the $x_u$ values 
+\[c=\overline{x}_w = \frac{\sum_{u\in\mathcal{P}}w_u x_u}{\sum_{u\in\mathcal{P}}w_u}\]
+We estimate $\alpha$ and $\beta$ as 
+\[\hat{\alpha} = \overline{y}_w - \hat{\beta}(\overline{x}_w - c)\]
+\[\hat{\beta} = \frac{\sum_{u\in\mathcal{P}}w_u (x_u - \overline{x}_w)(y_u - \overline{y}_w)}{\sum_{u\in\mathcal{P}}w_u (x_u - \overline{x}_w)^2}\]
+where $\overline{y}_w$ and $\overline{x}_w$ are the weighted averages of $y_u$ and $x_u$ respectively
+\subsubsection*{Robust Regression}
+Points that are far from the linear line should have less weight in the objective function. The objective function will be 
+\[(\hat{\alpha},\hat{\beta}) = \underset{\alpha,\beta}{argmin} \quad \sum_{u\in\mathcal{P}}\rho(y_u-\alpha-\beta (x_u - c))\]
+In robust regression we modify the loss function $\rho(y_u-\alpha-\beta (x_u - c))$ so that 
+\begin{itemize}
+    \item gives lower weight than least squares to units with large residuals 
+    \item it is quadratice near $0$ and hence behaves similarly to LS for units with small residuals 
+\end{itemize}
+\subsubsection*{Huber Loss Function}
+It achieves these goals by combining the quadratice and absolute value functions 
+\begin{align*}
+    \rho_k(r) &= 
+    \begin{cases}
+        \frac{1}{2}r^2 & |r|<k \\
+        k(|r|-k/2) & |r|\geq k
+    \end{cases}
+\end{align*}
+Another form of robust regressino involves defining the loss function in terms of least absolute deviations (LAD)
+\[(\hat{\alpha},\hat{\beta}) = \underset{\alpha,\beta}{argmin} \quad \sum_{u\in\mathcal{P}}|y_u-\alpha-\beta (x_u - c)|\]
+\subsubsection{Gradient Descent}
+\subsubsection*{Direction and Step Size}
+If $\rho(\theta;\mathcal{P})$ is a differentiable function of $\theta = (\theta_1,\cdots,\theta_p)\in\R^k$, then we can calculate the gradient for any value of $\theta$
+\[g = g(\theta) = \tri\rho(\theta;\mathcal{P}) = \cv{\dfrac{\partial \rho(\theta;\mathcal{P})}{\partial \theta_1}\\\vdots\\\dfrac{\partial \rho(\theta;\mathcal{P})}{\partial \theta_k}}\]
+By definition, the normalized gradient \[d_i = \dfrac{g_i}{||g_i||}\]    
+provides the direction in which $\rho(\theta;\mathcal{P})$ increases or decreases fastest 
+\begin{itemize}
+    \item $d_i$ indicates the direction of steepest ascent 
+    \item $-d_i$ incidates the directino of steepest descent 
+\end{itemize}
+We iterate and obtain a new estimate of $\theta$ by 
+\begin{itemize}
+    \item moving in the direction of $-d_i$ and 
+    \item taking a step of size $\lambda_i > 0$ \[\hat{\theta}_{i+1} = \hat{\theta}_i - \lambda_id_i\]    
+\end{itemize}
+Note that the step size $\lambda$ at each iteration can been chosen in a variety of ways 
+\begin{enumerate}
+    \item could choose a fied value for all $i$ such as $\lambda_i = 0.1$
+    \item could define a fixed sequence such as $\lambda_i=0.1 + 1/i$
+    \item could perform a line search and algorithmically choose the value of $\lambda_i$ that minimizes \[\rho(\hat{\theta}_i - \lambda_id_i)\] 
+\end{enumerate}
+\subsubsection*{The Gradient Descent Algorithm}
+Given some initial values $\hat{\theta}_0$ 
+\begin{enumerate}
+    \item initialize $i=0$
+    \item Loop until convergence:
+    \begin{enumerate}[a.]
+        \item Gradient: \[g_i = \nabla\rho(\hat{\theta}_i;\mathcal{P})\]
+        \item Gradient direction: \[d_i = \frac{g_i}{||g_i||}\]
+        \item Line search: Find the step size $\hat{\lambda}_i$ \[\hat{\lambda}_i = \underset{\lambda>0}{argmin} \quad \rho(\hat{\theta}_i - \lambda d_i)\]    
+        \item Update iterate: \[\hat{\theta}_{i+1} = \hat{\theta}_i - \hat{\lambda}_i d_i\]
+        \item Converged?
+        \begin{itemize}
+            \item if iteratesnot changing, Return 
+            \item else $i = i + 1$ and repeat
+        \end{itemize}
+    \end{enumerate}
+    \item Return $\hat{\theta} = \hat{\theta}_i$
+\end{enumerate}
+\newpage 
+\subsubsection*{R Code for Gradient Descent}
+\begin{lstlisting}[language=R]
+gradientDescent <- function(theta = 0, rhoFn, gradientFn, lineSearchFn, 
+    testConvergenceFn, maxIterations = 100, tolerance = 1e-06, relative = FALSE, 
+    lambdaStepsize = 0.01, lambdaMax = 0.5) {
+
+    converged <- FALSE
+    i <- 0
+
+    while (!converged & i <= maxIterations) {
+    g <- gradientFn(theta)      ## gradient
+    glength <- sqrt(sum(g^2))   ## gradient direction
+    if (glength > 0)
+        d <- g / glength
+
+    lambda <- lineSearchFn(theta, rhoFn, d, lambdaStepsize = lambdaStepsize,
+                            lambdaMax = lambdaMax)
+
+    thetaNew <- theta - lambda * d
+    converged <- testConvergenceFn(thetaNew, theta, tolerance = tolerance,
+                                    relative = relative)
+    theta <- thetaNew
+    i <- i + 1
+    }
+
+    ## Return last value and whether converged or not
+    list(theta = theta, converged = converged, iteration = i, fnValue = rhoFn(theta))
+}
+\end{lstlisting}
+\subsubsection{Systems of Equations}
+\subsubsection*{Scalar Valued Attributes}
+The average is the value of $\theta$ that solves 
+\[\psi(\theta;\mathcal{P}) = \sum_{u\in\mathcal{P}}\psi(\theta;u)=\sum_{u\in\mathcal{P}}y_u-n\theta=0\]   
+The weighted average is the value of $\theta$ which solves 
+\[\psi(\theta;\mathcal{P}) = \sum_{u\in\mathcal{P}}\psi(\theta;u)=\sum_{u\in\mathcal{P}}w_u(y_u-\theta)=0\]
+The $q$-th quantile is the samllest $\theta$ which solves 
+\[\psi(\theta;\mathcal{P})=\sum_{u\in\mathcal{P}}\psi(\theta;u)=\sum_{u\in\mathcal{P}}\frac{1}{N}I(y_u\leq\theta)-q=0\]    
+\subsubsection*{Vector Valued Attributes}
+Least squares
+\[\psi(\theta;\mathcal{P}) = \sum_{u\in\mathcal{P}}\psi(\theta;u) = \sum_{u\in\mathcal{P}}(y_u-\alpha-\beta(x_u-c))\cv{1\\x_u-c}=0\]    
+Weighted least squares 
+\[\psi(\theta;\mathcal{P}) = \sum_{u\in\mathcal{P}}\psi(\theta;u) = \sum_{u\in\mathcal{P}}w_u(y_u-\alpha-\beta(x_u-c))\cv{1\\x_u-c}=0\]
+Robust regression
+\[\psi(\theta;\mathcal{P}) = \sum_{u\in\mathcal{P}}\psi(\theta;u) = \sum_{u\in\mathcal{P}}\rho'_k(y_u-\alpha-\beta(x_u-c))\cv{1\\x_u-c}=0\]    
+\subsubsection{Newton's Method}
+Suppose we have a differentiable function $f(x)$ and we wish to find $x=x^*$ which solves \[f(x)=0\]    
+Given initial value $x_0$
+\begin{itemize}
+    \item use a linear function to approximate $f(x)$ in the vicinity of $x_0$ \[f(x)\approx f(x_0)+f'(x_0)(x-x_0)\]    
+    \item then find the root of linear approximation to iterate to the next value of $x$ \[0=f(x_0)+f'(x_0)(x-x_0)\implies x_1=x_0-\frac{f(x_0)}{f'(x_0)}\]
+    \item continue until $x_{i+1}$ does not differ much from $x_i$ 
+\end{itemize}
+For implicitly defined scalar attribute $\theta$, we want to find $\theta\in\Theta$ such that 
+\[\psi(\theta;\mathcal{P})=0\]    
+\begin{itemize}
+    \item Given current guess $\hat{\theta} = \hat{\theta}_i$ a first order approximation is \[\psi(\theta;\mathcal{P})\approx \psi(\hat{\theta}_i;\mathcal{P})+\psi'(\hat{\theta}_i;\mathcal{P})\times(\theta-\hat{\theta}_i)\]    
+    \item Then the update is the root of the linear approximation and is given by \[\hat{\theta}_{i+1}=\hat{\theta}_i-\frac{\psi(\hat{\theta}_i;\mathcal{P})}{\psi'(\hat{\theta}_i;\mathcal{P})}\]
+\end{itemize}
+\subsubsection*{The Newton Algorithm}
+Given an initial value $\hat{\theta}_0$
+\begin{enumerate}
+    \item Initialize: $i=0$
+    \item Loop:
+    \begin{enumerate}
+        \item Update iterate: \[\hat{\theta}_{i+1}=\hat{\theta}_i-\frac{\psi(\hat{\theta}_i;\mathcal{P})}{\psi'(\hat{\theta}_i;\mathcal{P})}\]
+        \item Converged?
+        \begin{itemize}
+            \item if iterates not changing, return 
+            \item else $i=i+1$ and repeat
+        \end{itemize}
+    \end{enumerate}
+    \item Return $\hat{\theta}=\hat{\theta}_i$
+\end{enumerate}
+\subsubsection{The Newton raphson Algorithm}
+The multivariate analog of Newton's method  \\ 
+Given an initial value $\hat{\theta}_0$ 
+\begin{enumerate}
+    \item Initialize: $i=0$
+    \item Loop:
+    \begin{enumerate}
+        \item Update iterate: \[\hat{\theta}_{i+1} = \hat{\theta}_i - [\psi'(\hat{\theta}_i;\mathcal{P})]^{-1}\psi(\hat{\theta}_i;\mathcal{P})\]    
+        \item Converged?
+        \begin{itemize}
+            \item if iterates not changing, return
+            \item else $i=i+1$ and repeat
+        \end{itemize}
+    \end{enumerate}
+    \item Return $\hat{\theta}=\hat{\theta}_i$
+\end{enumerate}
+\subsubsection{Iteratively Reweighted Least Squares (IRLS)}
+Given initial value $\hat{\theta}_0$
+\begin{enumerate}
+    \item Initialize: $i=0$
+    \item Loop:
+    \begin{enumerate}
+        \item Construct residuals and weights for all $u\in\mathcal{P}$ \[r_u = y_u - z_u'\theta_i\quad w_u = \frac{\rho'(r_u)}{r_u} \] where $z_u = \cv{1 &x_u-c}'$
+        \item Solve the weighted least squares problem \[\sum_{u\in\mathcal{P}}w_u(y_u-z_u'\theta)z_u = 0\]   
+        \item Update parameter: \[\hat{\theta}_{i+1} = \hat{\theta}_i\]    
+        \item Converged?
+        \begin{itemize}
+            \item if iterates not changing, return 
+            \item else $i=i+1$ and repeat
+        \end{itemize}
+    \end{enumerate}
+    \item return $\hat{\theta}=\hat{\theta}_i$
+\end{enumerate}
+\newpage 
+
+\section{Samples}
+If we have a sample or a subset $S$ of $n<<N$ units, then the attribute $a(S)$ calculated based 
+on this sample is an estimate of its population counterpart $a(\mathcal{P})$
+\[a(S) = \hat{a(\mathcal{P})} = a(\hat{\mathcal{P}})\]   
+\subsubsection*{Sample Error}
+Any difference between the actual values of the estimates $a(S)$ and the quantity being estimated (the estimand) $a(\mathcal{P})$ is an error 
+\[\text{sample error} = a(S) - a(\mathcal{P})\]
+The nature of this error will depend on the sample and attribute 
+\subsubsection*{Fisher Consistency}
+If the sample $S$ is equal to the population $\mathcal{P}$ then the sample error should be zero (or non-existent), $a(S) = a(\mathcal{P})$ \\
+This would mean the estimation is in some sense consistent, called Fisher consistency
+\subsection{All Possible Samples}
+\subsubsection*{Sample Error}
+The sample error for a sample $S$ of size $n$ is 
+\[a(S)-a(\mathcal{P}) = \frac{1}{n}\sum_{u\in S}y_u - \frac{1}{N}\sum_{u\in\mathcal{P}}y_u\]
+\subsubsection*{Average Sample Error}
+The average sample error over all possible samples of size $n$ is 
+\[\text{Average Sample Error} = (\frac{1}{M}\sum_{i=1}^{M}a(S_i))-a(\mathcal{P})\]    
+\subsubsection{Consistency and the Effect of Sample Size}
+The nature of sample error depends largely on the sample size
+\begin{itemize}
+    \item As sample size increases, the sample approaches the population  
+    \item Attribute values will concentrate even more around the population value 
+\end{itemize}
+We can quantify the concentration by 
+\[||a(S)-a(\mathcal{P})|| = ||\frac{1}{n}\sum_{u\in S}y_u-\frac{1}{N}\sum_{u\in\mathcal{P}}y_u||<c\]   
+for some $c>0$, we could proportion of samples that satisfy this \\
+Consider a population $\mathcal{P}$ of size $N<\infty$
+\begin{itemize}
+    \item For each $n$, construct the set of all possible samples \[\mathcal{P}_S(n) = \{S:S\subset\mathcal{P}, |S|=n\}\]    
+    \item For any $c>0$, \[\mathcal{P}_a(c,n) = \{S:S\subset\mathcal{P}_S(n), ||a(S)-a(\mathcal{P})||<c\}\] and define the proportion \[p_a(c,n) = \frac{|\mathcal{P}_a(c,n)|}{|\mathcal{P}_S(n)|}\]   for all $c>0$ and $n\leq N$
+\end{itemize}
+\subsubsection{Comparisons Across Attributes}
+We use relative absolute sample error to compare different attributes 
+\[\mathcal{P}^*_a(c,n)=\{S:S\subset\mathcal{P}_S(n), \frac{||a(S)-a(\mathcal{P})||}{||a(\mathcal{P})||}<c\}\] and define the corresponding proportino, for all $c>0$ and $n\leq N$
+\[p_a^*(c,n) = \frac{|\mathcal{P}_a^*(c,n)|}{|\mathcal{P}_S(n)|}\]
+\subsection{Selecting Samples}
+\subsubsection{Randomly Selecting m Samples}
+Consider drawing samples of size $n$ from population $\mathcal{P}$. The population $\mathcal{P}_S$ of all such 
+samples has size $M={\ds N\choose n}$ and is denoted \[\mathcal{P}_S=\{S_1,S_2,\cdots,S_M\}\]    
+Any attribute $a(S_u)$ is now just a variate on that unit \\
+We have a population of attributes 
+\[\mathcal{P}_{a(S)} = \{a(S_1),a(S_2),\cdots,a(S_M)\}\]
+\subsubsection{Quantifying Sample Error}
+In principle we select a sample $S$ from the population $\mathcal{P}_S$ contianing all possible samples 
+\begin{itemize}
+    \item We do so with some probability $p(S)\geq 0$ of being selected, require \[\sum_{S\in\mathcal{P}_S}p(S)=1\]    
+    \item For any sample $S\in\mathcal{P}_S$, we have sample error \[\text{Sample Error}=a(S)-a(\mathcal{P})\]    
+    \item Aveerage sample error is \[\text{Average Sample Error} = \frac{1}{M}\sum_{S\in\mathcal{P}_S}[a(S)-a(\mathcal{P})]\]    
+\end{itemize}
+\subsubsection{Sampling Bias, Sampling Variance, and Sampling Mean Squared Error}
+\subsubsection*{Sampling Bias}
+\begin{align*}
+    \text{Sampling Bias} &= E[a(S)] - a(\mathcal{P}) \\
+                         &= \sum_{S\in\mathcal{P}_S}a(S)p(S) - a(\mathcal{P}) \\
+                         &= \sum_{S\in\mathcal{P}_S}[a(S)-a(\mathcal{P})]p(S)
+\end{align*}
+Sampling bias is the expected sample error induced by the repeated random sampling of $S$ from $\mathcal{P}_S$ \\
+If sampling bias is zero, then $a(S)$ is unbiased estimator of $a(\mathcal{P})$ 
+\subsubsection*{Sampling Variance}
+\[Var[a(S)] = E[(a(S)-E(a(S)))^2] \]    
+This quantifies dispersion in sample errors
+\subsubsection*{Mean Squared Error}
+Use to quantify the expected squared distance between $a(S)$ and $a(\mathcal{P})$ 
+\[MSE[a(S)] = E[(a(S)-a(\mathcal{P}))^2] = Var[a(S)] + [\text{Sampling Bias}]^2\]    
+\subsubsection{Sampling Mechanisms}
+A sequence of the first $k$ units $u_i$ selected from $\mathcal{P}$ is 
+\[s_k = (u_{i1},u_{i2},\cdots,u_{ik})\]
+A sampling mechanism is defined by the probabilities 
+\[Pr(u)\text{ and } Pr(u|k,s_{k-1})\]
+where 
+\begin{itemize}
+    \item the first unit is selected with probabilityy $Pr(u)$ and 
+    \item the probability of the sequence of the first $k$ units selected is 
+    \[Pr(s_k) = Pr(u_{i1})Pr(u_{i2}|2,s_{1})\cdots Pr(u_{ik}|k,s_{k-1})\]
+\end{itemize}
+\subsubsection*{Simple Random Sampling Without Replacement (SRSWOR)}
+The sampling mechanism is \[Pr(u) = \frac{1}{N} \text{ and } Pr(u|k,s_{k-1}) = \frac{1}{N-k+1}\]
+The probability of the sequence $s_n$ is 
+\[Pr(s_n) = \frac{1}{N}\frac{1}{N-1}\cdots\frac{1}{N-n+1} \]    
+which is the same for all $n!$ permutations, so 
+\[p(S) = \frac{n!}{N(N-1)\cdots(N-n+1)} = \frac{1}{{N\choose n}}\]
+\subsubsection*{Simple Random Sampling With Replacement (SRSWR)}
+The sampling mechanism is 
+\[Pr(u) = \frac{1}{N} = Pr(u|k,s_{k-1})\]
+Sample $S$ can contain one or more replicated units \\
+The probability of the sequence $s_n$ is 
+\[Pr(s_n) = \frac{1}{N^n}\]
+\subsubsection{Unit Inclusion Probabilities}
+The inclusion probability for unit $u$ is probability of unit $u$ being included in the sample 
+\[\pi_u = Pr(u\in S) = \sum_{S\in\mathcal{P}_S}p(S)\times I(u\in S)\]    
+Such inclusion probabilities are of interest to calculate in addition to $p(S)$ and may in fact be derived from $p(S)$ \\
+Consider the following random variable 
+\begin{align*}
+    D_u = \begin{cases}
+        1 & \text{if } u\in S \\
+        0 & \text{if } u\notin S
+    \end{cases}
+\end{align*}
+The expectation of this random variable is 
+\begin{align*}
+    E[D_u] &= 1\times Pr(D_u=1) + 0\times Pr(D_u=0) \\
+           &= Pr(u\in S) \\
+           &= \pi_u
+\end{align*}
+The variance of this random variable is 
+\begin{align*}
+    Var[D_u] &= E[D_u^2] - E[D_u]^2 \\
+             &= 1^2\times Pr(D_u=1) + 0^2\times Pr(D_u=0) - \pi_u^2 \\
+             &= \pi_u - \pi_u^2 \\
+             &= \pi_u(1-\pi_u)
+\end{align*}
+The probability that $u$ and $v$ are in the sample $S$ is called the joint inclusion probability and is given by 
+\[\pi_{uv} = Pr(u\in S, v\in S)\]
+The relationship is 
+\begin{align*}
+    Cov(D_u,D_v) &= E[D_u\times D_v] - E[D_u]E[D_v] \\
+               &= Pr(u\in S, v\in S) - \pi_u\pi_v \\
+               &= \pi_{uv} - \pi_u\pi_v
+\end{align*}
+\subsubsection*{Simple Random Sampling Without Raplacement (SRSWOR)}
+The inclusion probability is 
+\[\pi_u = Pr(u\in S) = \frac{n}{N}\]
+The joint inclusion probability is
+\[\pi_{uv} = Pr(u\in S, v\in S) = \frac{n(n-1)}{N(N-1)}\]
+\subsubsection*{Simple Random Sampling Withou Replacement (SRSWR)}
+The inclusion probability is 
+\[\pi_u = 1 - \left(\frac{N-1}{N}\right)^n\]
+The joint probability is 
+\[\pi_{uv} = 1 - 2\left(\frac{N-1}{N}\right)^n + \left(\frac{N-2}{N}\right)^{n}\]
+\subsubsection{Estimating Tools}
+A natural estimate of a population total 
+\[a(\mathcal{P}) = \sum_{u\in\mathcal{P}}y_u\]
+is the Horvitz-Thompson estimate defined as 
+\[\hat{a}(\mathcal{P}) = a_{HT}(S) = \sum_{u\in S}\frac{y_u}{\pi_u}\]
+where the contribution for each unit in the sample is weighted inversely by $\pi_u$, its probability of inclusion in $S$
+\begin{itemize}
+    \item if the probability of inclusion is small, then the weight will be high
+    \item if the probability of inclusion is large, then the weight will be low 
+\end{itemize}
+\subsubsection*{The Horvitz-Thompson Estimator}
+\subsubsection*{Bias, Variance, and Mean Squared Error}
+The bias of the HT estimator 
+\begin{align*}
+    E[\tilde{a}_{HT}(S) - a(\mathcal{P})] &= 0
+\end{align*}
+The variance of the HT estimator is 
+\[Var[\tilde{a}_{HT}(S)] = \sum_{u\in P}\sum_{v\in P}(\pi_{uv} - \pi_u\pi_v)\frac{y_u}{\pi_u}\frac{y_v}{\pi_v} = \sum_{u\in S}\sum_{v\in S}Cov(D_u,D_v)\frac{y_u}{\pi_u}\frac{y_v}{\pi_v}\] 
+The HT estimator is unbiased, the mean squared error is equal to the variance 
+\[MSE = Var\]    
+The HT estimate of the variance of the HT estimator is 
+\[\hat{Var}[\tilde{a}_{HT}(S)] = \sum_{u\in S}\sum_{v\in S}(\frac{\pi_{uv}-\pi_u\pi_v}{\pi_{uv}})\frac{y_u}{\pi_u}\frac{y_v}{\pi_v}\]    
+Using HT estimation we are able to construct 
+\begin{itemize}
+    \item an estimate of population total 
+    \item an estimate of the variance of this estimator 
+    \item both estimators are unbiased
+\end{itemize}
+\subsubsection{Sampling Designs}
+The pair $(\mathcal{P}_S,p(S))$ is called a sampling design 
+\begin{itemize}
+    \item Together they determine which samples are possible and with what probability they are selected 
+    \item The SRSWOR, SRSWR and SRSWH frameworks provide examples of different sampling designs 
+    \item The sampling design is ours to choose 
+    \begin{itemize}
+        \item We may choose $\mathcal{P}_S$ so that the values $a(S)$ for $S\in\mathcal{P}_S$ are constrained to be near $a(\mathcal{P})$ 
+        \item We may choose $p(S)$ so that samples $S\in\mathcal{P}_S$ that have $a(S)$ close to $a(\mathcal{P})$ have higher probability $p(S)$ of being selected 
+    \end{itemize}
+\end{itemize}
+
+\newpage 
+\section{Inference}
+\subsection{Sources of Error}
+\subsubsection{Target and Study Populations}
+The target population is the population about which we would like to draw an inference \\
+The study population is the population from which samples are taken \\
+The difference between attribute evaluated on the two populations is the \textbf{study error}
+\[Study\ Error = a(\mathcal{P}_{study}) - a(\mathcal{P}_{target})\]
+Then if we obtain a sample $S$ to draw inferences about the target popiulation $\mathcal{P}_{target}$, the error for a 
+given attribute $a(\cdot)$ is 
+\begin{align*}
+    a(S) - a(\mathcal{P}_{target}) &= [a(S) - a(\mathcal{P}_{study})] + [a(\mathcal{P}_{study}) - a(\mathcal{P}_{target})] \\
+    &= Sample\ Error + Study\ Error
+\end{align*}
+\subsubsection*{Future Realizations}
+The units which are not available at the time of study 
+\subsubsection{Measurement Error}
+Every measuring system has at least three sources of potential error:
+\begin{itemize}
+    \item the measuring device (gauge)
+    \item the person reading or recording the measurement (operator)
+    \item the method followed to take the measurement 
+\end{itemize}
+
+\subsection{Comparing Sub-Populations}
+\subsubsection{Anatomy of a Significance Test}
+We would like to quantify, numerically, how unusual the difference between $a(\mathcal{P}_1)$ and $a(\mathcal{P}_2)$ is relative to randomly mixed sub-populations \\
+Following steps are used to gather such evidence:
+\begin{enumerate}
+    \item Suppose the sub-populations were randomly drawn from the same population, known as the \textbf{null hypothesis}
+    \item Construct a \textbf{discrepency measure} that quantifies how inconsistent our data is with the null hypothesis, large value indicate evidence against the null hypothesis 
+    \item Obtain the \textbf{observed discrepency} by calculating the discrepency measure on the observed / unshuffled sub-populations 
+    \item Obtain the \textbf{observed p-value} by calculating the probability that a randomly shuffled sub-population has a discrepency measure at least as large as the observed discrepency, small values indicate evidence against the null hypothesis 
+\end{enumerate}
+\subsubsection*{Null Hypothesis}
+Each of the following (equivalent) statements constitutes the null hypothesis we are testing:
+\begin{itemize}
+    \item $H_0$: the sub-populations $\mathcal{P}_1$ and $\mathcal{P}_2$ were randomly drawn from the same population 
+    \item $H_0$: $\mathcal{P}_1$ and $\mathcal{P}_2$ were created by randomly assigning units in the same population to one of the two sub-populations 
+    \item $H_0$: $\mathcal{P}_1$ and $\mathcal{P}_2$ were generated by random mixing 
+\end{itemize}
+\subsubsection*{Discrepency Measure}
+A discrepency measure $D(\mathcal{P}_1, \mathcal{P}_2)$ quantifies how inconsistent data is with the null hypothesis, is defined so that large values indicate evidence against the null hypothesis \\
+Form of $D(\mathcal{P}_1, \mathcal{P}_2)$ depends on how we want to compare $\mathcal{P}_1$ and $\mathcal{P}_2$ 
+\begin{itemize}
+    \item compare measures of location, typically based on difference \[a(\mathcal{P}_1) - a(\mathcal{P}_2)\]
+    \item compare measures of spread, typically based on ratios \[\frac{a(\mathcal{P}_1)}{a(\mathcal{P}_2)}\]
+\end{itemize}
+\subsubsection*{Observed Discrepency}
+The observed discrepency $d_{obs}$, is the value of discrepency measure $D$ calculated on the two observed / unshuffled sub-populations 
+\[d_{obs} = D(\mathcal{P}_1, \mathcal{P}_2)\]
+\subsubsection*{Observed p-value}
+The observed p-value is the probability that a randomly shuffled sub-population has a discrepency measure at least as large as the observed discrepency 
+\[p-value = Pr(D\geq d_{obs}|\text{$H_0$ is true})\]
+\begin{itemize}
+    \item $p-value < 0.001$: very strong evidence against $H_0$
+    \item $0.001 < p-value < 0.01$: strong evidence against $H_0$
+    \item $0.01 < p-value < 0.05$: moderate evidence against $H_0$
+    \item $0.05 < p-value < 0.1$: weak evidence against $H_0$
+    \item $p-value > 0.1$: no evidence against $H_0$
+    \item in extreme cases, $p-value=0$, the hypothesis must be false 
+\end{itemize}
+There are $\binom{N_1+N_2}{N_1} = \binom{N_1+N_2}{N_2}$ possible permutations of the observed data \\
+Because that's too many permutations to consider, we typically just use $M$ of them, the p-value is approximated as 
+\[\frac{1}{M}\sum_{i=1}^{M}I(D(\mathcal{P}_{1,i},\mathcal{P}_{2,i})\geq d_{obs})\]
+\subsubsection*{Putting all Together}
+Test of Significance Algorithm 
+\begin{enumerate}
+    \item State the null hypothesis: $H_0$: $\mathcal{P}_1$ and $\mathcal{P}_2$ are drawn from the same population 
+    \item Construct a measure of discrepency $D=D(\mathcal{P}_1,\mathcal{P}_2)$ where large values indicate evidence against the null hypothesis 
+    \item Calculate the observed discrepency $d_{obs} = D(\mathcal{P}_1,\mathcal{P}_2)$
+    \item Shuffle the sub-populations $M$ times and calculate the observed p-value \[p-value = Pr(D\geq d_{obs}|\text{$H_0$ is true})\approx \frac{1}{M}\sum_{i=1}^{M}I(D(\mathcal{P}_{1,i},\mathcal{P}_{2,i})\geq d_{obs})\]
+\end{enumerate}
+\subsubsection{A t-like Discrepency Measure}
+When comparing two sub-populations on the basis of a measure of location, one particularly useful discrepancy measure is 
+\[D(\mathcal{P}_1,\mathcal{P}_2) = \frac{a(\mathcal{P}_1)-a(\mathcal{P}_2)}{\sqrt{Var(\tilde{a}(\mathcal{P}_1))+Var(\tilde{a}(\mathcal{P}_2))}}\]
+This is scale-invariant 
+\subsubsection{Multiple Testing}
+\subsubsection*{Estimating $d^*_{obs}$}
+\begin{itemize}
+    \item Suppose we have $K$ discrepancy measures $D_1,D_2,\cdots,D_K$ 
+    \begin{itemize}
+        \item The combined discrepancy measure is \[D^* = 1 - p-value_{min}\]
+    \end{itemize}
+    \item For $i=1,\cdots,M_{inner}$ and each discrepancy $k=1,\cdots,K$
+    \begin{itemize}
+        \item randomly mix the two sub-populations $\mathcal{P}_1$ and $\mathcal{P}_2$ yielding $\mathcal{P}^*_{1,i}$ and $\mathcal{P}^*_{2,i}$
+        \item calculate \[d_{k,i} = D_k(\mathcal{P}^*_{1,i},\mathcal{P}^*_{2,i})\]
+        \item we estimate each p-value labelled as $p_k$ with \[\hat{p}_k = \frac{1}{M_{inner}}\sum_{i=1}^{M_{inner}}I(d_{k,i}\geq d_{obs,k})\]
+    \end{itemize}
+    \item we estimate $p-value_{min}$ as \[\hat{d}^*_{obs} = 1 - \min_{k=1,\cdots,K}\hat{p}_k\]
+\end{itemize}
+\subsubsection*{Estimating $p-value^*$}
+\[\hat{p-value}^* = \frac{1}{M_{outer}}\sum_{i=1}^{M_{outer}}I(D^*(\mathcal{P}^*_{1,i},\mathcal{P}^*_{2,i})\geq d^*_{obs})\]
+\subsection{Interval Estimation}
+\subsubsection{Random vs. Observed Intervals}
+Suppose the attribute of interest is the population average $a(\mathcal{P}) = \mu = \overline{y}$
+\[\overline{Y}\sim N(\mu, \frac{\sigma^2}{n}(\frac{N-n}{N-1}))\]
+where \[\sigma^2 = \frac{1}{N}\sum_{u\in\mathcal{P}}(y_u - \mu)^2\]
+\subsubsection*{Random Intervals}
+using the standardized random variable and sepcified $p\in(0,1)$ we can find a constant $c>0$ such that 
+\[1-p = Pr(\overline{Y} - c\cdot \frac{\sigma}{\sqrt{n}}\sqrt{\frac{N-n}{N-1}} \leq \mu \leq \overline{Y} + c\cdot \frac{\sigma}{\sqrt{n}}\sqrt{\frac{N-n}{N-1}})\]
+\subsubsection*{Observed Intervals}
+\[\left[\overline{y} - c\cdot \frac{\sigma}{\sqrt{n}}\sqrt{\frac{N-n}{N-1}} \leq \mu \leq \overline{y} + c\cdot \frac{\sigma}{\sqrt{n}}\sqrt{\frac{N-n}{N-1}}\right]\]
+where $\overline{y}$ is the sample mean and $\sigma$ is the sample standard deviation
+\subsubsection{Student $t$ Based Intervals}
+\subsubsection*{Standard Error vs. Standard Deviation}
+The standard error is an estimate of the standard deviation of the corresponding estimator 
+\[SE[\tilde{a}(\mathcal{P})] = \hat{SD}[\tilde{a}(\mathcal{P})]\]
+\[\frac{\overline{Y}-\mu}{\frac{\tilde{\sigma}}{\sqrt{n}}\sqrt{\frac{N-n}{N-1}}}\sim t_{n-1}\]
+In the special case that $a(\mathcal{P}) = \overline{Y}$ is the population average then the standard deviation is 
+\[SD[\tilde{a}(S)] = \frac{\sigma}{\sqrt{n}}\sqrt{\frac{N-n}{N-1}}\]
+the standard deviation estimator is 
+\[\tilde{SD}[\tilde{a}(S)] = \frac{\tilde{\sigma}}{\sqrt{n}}\sqrt{\frac{N-n}{N-1}}\]
+the standard error is 
+\[\hat{SE}[\tilde{a}(S)] = \frac{\hat{\sigma}}{\sqrt{n}}\sqrt{\frac{N-n}{N-1}}\]
+
+\subsection{Resampling}
+\subsubsection{Resampling Intuitions}
+In practice, the population from which our sample was taken cannot generally be repeatedly sampled, we only have one sample \\
+\textbf{Resampling} methods aim to mimic this process by repeatedly sampling $S$ as if it were $\mathcal{P}$ \\
+\textbf{Bootstrapping} is a resampling method that sample with replacement from the sample $S$ to create a new sample $S^*$ of the same size as $S$ 
+\subsubsection{Bootstrap}
+The bootstrap esetimate is, at best, as good as $a(S)$ 
+\[bootstrap\ sample\ error = a(S^*) - a(\mathcal{S})\]
+\subsubsection*{Bootstrap Standard Deviation}
+The standard deviation of the corresponding sample attribute's estimator can be estimated from the bootstrap distribution with 
+\[\hat{SD}_*[\tilde{a}(S^*)] = \sqrt{\frac{\sum_{b=1}^{B}(a(S^*_b)-\overline{a}^*)^2}{B-1}}\]
+\subsubsection{Bootstrap Confidence Intervals}
+A $95\%$ naive normal theory bootstrap confidence interval for a population attribute $a(\mathcal{P})$ is 
+\[a(S)\pm 1.96\cdot \hat{SD}_*[\tilde{a}(S^*)]\]
+\subsubsection{Bootstrap t Confidence Intervals}
+
+
+
+\newpage 
+\section{Prediction}
+\subsection{Accuracy of Prediction}
+\subsubsection*{Prediction}
+The response model \[y = \mu(x) + error\]
+yields the predictor function $\hat{\mu}(x)$
+\subsubsection*{Accuracy of Prediction}
+One measure of inaccuracy over the population $\mathcal{P}$ (of size $N$) is the average prediction squared error (APSE)
+\[\frac{1}{N}\sum_{u\in\mathcal{P}}(y_u - \hat{\mu}(x_u))^2\]
+
+
+
+\subsection{Predictions over Multiple Samples}
+\subsubsection{Calculating APSE Over Many Samples}
+The inaccuracy of a predictor function $\hat{\mu}(x)$ is measured by its average prediction squared error 
+\[APSE(\mathcal{P},\hat{\mu}_S) = \frac{1}{N}\sum_{u\in\mathcal{P}}(y_u - \hat{\mu}_S(x_u))^2\]
+The average APSE over all $M$ samples should be a better measure of the quality of a predictor functino 
+\[APSE(\mathcal{P},\tilde{\mu}) = \frac{1}{M}\sum_{i=1}^{M}APSE(\mathcal{P},\hat{\mu}_{S_i}) = \frac{1}{M}\sum_{i=1}^M \frac{1}{N}\sum_{u\in\mathcal{P}}(y_u - \hat{\mu}_{S_i}(x_u))^2\]
+\subsubsection{Decompose $APSE(\mathcal{P}, \tilde{\mu})$}
+\begin{align*}
+    APSE(\mathcal{P},\tilde{\mu}) &= \frac{1}{N}\sum_{u\in\mathcal{P}}(y_u - \tau(x_u))^2 + \frac{1}{M}\sum_{j=1}^{M}\frac{1}{N}\sum_{u\in\mathcal{P}}(\hat{\mu}_{S_j}(x_u) - \overline{\hat{\mu}}(x_u))^2 + \frac{1}{N}\sum_{u\in\mathcal{P}}(\overline{\hat{\mu}}(x_u) - \tau(x_u))^2 \\
+    &= Ave_X(Var[Y|X]) + Var[\tilde{\mu}] + Bias^2[\tilde{\mu}] 
+\end{align*}
+
+
+
+
+\subsection{Back to Reality}
+
+
+\end{document}

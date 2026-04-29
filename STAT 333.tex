@@ -1,0 +1,819 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,enumerate,nicefrac,fancyhdr,hyperref,graphicx,adjustbox,dsfont}
+\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
+\usepackage[left=2.6cm, right=2.6cm, top=1.5cm, includehead, includefoot]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[d]{esvect}
+
+%% commands
+%% useful macros [add to them as needed]
+% sets
+\newcommand{\C}{{\mathbb{C}}} 
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\F}{{\mathbb{F}}}
+
+% bases
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mB}{\mathcal{B}}
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mE}{\mathcal{E}}
+\newcommand{\mL}{\mathcal{L}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mO}{\mathcal{O}}
+\newcommand{\mP}{\mathcal{P}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mT}{\mathcal{T}}
+
+% linear algebra
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\adj}{\operatorname{adj}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\spn}{\operatorname{Span}}
+\newcommand{\proj}{\operatorname{proj}}
+\newcommand{\prp}{\operatorname{perp}}
+\newcommand{\refl}{\operatorname{refl}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\nul}{\operatorname{Null}}
+\newcommand{\nully}{\operatorname{nullity}}
+\newcommand{\range}{\operatorname{Range}}
+\renewcommand{\ker}{\operatorname{Ker}}
+\newcommand{\col}{\operatorname{Col}}
+\newcommand{\row}{\operatorname{Row}}
+\newcommand{\cof}{\operatorname{cof}}
+\newcommand{\Num}{\operatorname{Num}}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\ipb}{\langle \thinspace, \rangle}
+\newcommand{\ip}[2]{\left\langle #1, #2\right\rangle} % inner products
+\newcommand{\M}[2]{M_{#1\times #2}(\F)}
+\newcommand{\RREF}{\operatorname{RREF}}
+\newcommand{\cv}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+\newenvironment{amatrix}[1]{\left[\begin{array}{@{}*{\numexpr#1-1}{c}|c@{}}}{\end{array}\right]}
+\newcommand{\am}[2]{\begin{amatrix}{#1} #2 \end{amatrix}}
+
+% vectors
+\newcommand{\vzero}{\vv{0}}
+\newcommand{\va}{\vv{a}}
+\newcommand{\vb}{\vv{b}}
+\newcommand{\vc}{\vv{c}}
+\newcommand{\vd}{\vv{d}}
+\newcommand{\ve}{\vv{e}}
+\newcommand{\vf}{\vv{f}}
+\newcommand{\vg}{\vv{g}}
+\newcommand{\vh}{\vv{h}}
+\newcommand{\vl}{\vv{\ell}}
+\newcommand{\vm}{\vv{m}}
+\newcommand{\vn}{\vv{n}}
+\newcommand{\vp}{\vv{p}}
+\newcommand{\vq}{\vv{q}}
+\newcommand{\vr}{\vv{r}}
+\newcommand{\vs}{\vv{s}}
+\newcommand{\vt}{\vv{t}}
+\newcommand{\vu}{\vv{u}}
+\newcommand{\vvv}{{\vv{v}}}
+\newcommand{\vw}{\vv{w}}
+\newcommand{\vx}{\vv{x}}
+\newcommand{\vy}{\vv{y}}
+\newcommand{\vz}{\vv{z}}
+
+% display
+\newcommand{\ds}{\displaystyle}
+\newcommand{\qand}{\quad\text{and}}
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\hint}{\textbf{Hint: }}
+\newcommand{\tri}{\triangle}
+\newcommand{\dso}{\mathds{1}}
+
+% misc
+\newcommand{\area}{\operatorname{area}}
+\newcommand{\vol}{\operatorname{vol}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\rc}{\red{\checkmark}}
+
+\title{STAT 333 Notes}
+\author{Thomas Liu}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\newpage
+\section{Review of Elementary Probability}
+\subsection{Probability Space}
+\subsubsection*{Experiment}
+A fair coin is tossed once 
+\subsubsection*{Sample Space}
+Set of all possible outcomes ($\Omega$), $\Omega\in\{H,T\}$
+\subsubsection*{Events}
+Roughly set of all subsets of sample space $\Omega$, $\epsilon = \{\emptyset, \{H\}, \{T\}, \{H,T\}\}$
+\subsection{Probability}
+Probability is a function from the set of all events $\epsilon$ to $\R$, $P:\epsilon\to\R$
+\begin{itemize}
+    \item for any $A\in\epsilon$, $P(A)\in[0,1]$
+    \item $P(\Omega)=1$
+    \item for any $n\in\Z^+$, $E_1,E_2,\cdots,E_n\in\epsilon$ such that $E_i\cap E_j=\emptyset$ for $i\neq j$, then $\ds P(\cup_{i=1}^n E_i)=\sum_{i=1}^n P(E_i)$
+\end{itemize}
+\subsubsection*{Properties}
+\begin{itemize}
+    \item $P(\emptyset)=0$
+    \item $A,B\in\epsilon$, $P(A\cup B)=P(A)+P(B)-P(A\cap B)$
+    \item for any $A\in\epsilon$, $P(A^c)=1-P(A)$
+    \item if $A,B$ satisfies $A\cap B=\emptyset$, then $P(A\cup B)=P(A)+P(B)$
+    \item If $A\subseteq B$, then $P(A)\leq P(B)$
+\end{itemize}
+\subsection{Conditional Probability}
+The conditional probability of an event $A$ given $B$ is 
+\[P(A|B)=\frac{P(A\cap B)}{P(B)}\]
+and is only defined when $P(B)>0$
+\subsubsection*{Properties}
+\begin{itemize}
+    \item $P(A\cap B) = P(A|B)P(B)$
+    \item for any $A_1,A_2,\cdots,A_n$, $P(A_1\cap A_2\cap\cdots\cap A_n)=P(A_1)P(A_2|A_1)P(A_3|A_1\cap A_2)\cdots P(A_n|A_1\cap A_2\cap\cdots\cap A_{n-1})$
+    \item $P(A^c|B)=1-P(A|B)$
+    \item $A_1,A_2$ are two events, $P(A_1\cup A_2|B)=P(A_1|B)+P(A_2|B)-P(A_1\cap A_2|B)$
+\end{itemize}
+\subsection{Independent Events}
+Two events $A$ and $B$ are mutually independent of each other if $P(A\cap B)=P(A)P(B)$ \\
+The events $A_1,A_2,\cdots,A_n$ are mutually independent if $\ds P(A_1\cap A_2\cap\cdots\cap A_n)=\prod_{i=1}^{n}P(A_i)$ 
+\begin{itemize}
+    \item if $A$ and $B$ are independent of each other, $P(A|B) = P(A)$
+\end{itemize}
+\subsection{Law of Total Probability}
+Say $E_1,\cdots,E_n$ are disjoint events. If satisfies $E_i\cap E_j=\emptyset$ for $i\neq j$, $\cup_{i=1}^n E_i=\Omega$. Then for any event $A$, 
+\[P(A) = \sum_{i=1}^n P(A|E_i)P(E_i)\]
+\subsection{Bayes' Formula}
+\begin{align*}
+    P(E_i|A) &= \frac{P(A\cap E_i)}{P(A)} \\
+             &= \frac{P(A\cap E_i)}{\sum_{j=1}^n P(A\cap E_j)} \\
+             &= \frac{P(A|E_i)P(E_i)}{\sum_{j=1}^{n}P(A|E_j)P(E_j)}
+\end{align*}
+\subsection{Random Variables}
+A function from sample space to real numbers $X:\omega\to\R$. Range of $X$: state space 
+\subsection{Discrete Random Variables}
+If state space / range of random variable is discrete ($\{a_1,a_2,\cdots\}$)
+\subsubsection*{Probability Mass Function (PMF)}
+\[P(a) = P(X=a)\]
+\subsubsection*{Cumulative Distribution Function (CDF)}
+\[F(a) = P(X\leq a) = \sum_{x\leq a}P(X=x)\]
+\subsubsection*{Tail Probability Function (TPF)}
+\[\overline{F}(a) = P(X>a) = 1-F(a)\]
+\subsubsection*{Properties}
+State space = $\{a_1,a_2,\cdots\}$, $a_1<a_2<\cdots$
+\[p(a_i) = F(a_i) - F(a_{i-1})\]
+\subsection{Discrete Distributions}
+\subsubsection*{Bernoulli Distribution}
+$x\in\{0,1\}$, $X\sim Ber(p)$
+\[p(x) = p^x(1-p)^{1-x}\]
+\subsubsection*{Binomial Distribution}
+$x$: number of successes in $n$ independent $Ber(p)$ trials, $x\in\{0,1,\cdots,n\}$, $X\sim Bin(n, p)$
+\[p(x) = \binom{n}{x}p^x(1-p)^{n-x}\]
+\subsubsection*{Geometric Distribution}
+$x_1,x_2,\cdots,\overset{iid}{\sim}Ber(p)$ \\
+$y$: number of trials required to get the first success, $y\in\{1,2,\cdots\}$, $Y\sim Geo(p)$
+\[p_Y(x) = P(Y=x) = (1-p)^{x-1}p\]
+$z$: number of failures until the first success, $z\in\{0,1,\cdots\}$, $Z\sim Geo(p)$
+\[p_Z(x) = P(Z=x) = (1-p)^{x}p\]
+\subsubsection*{Poisson Distribution}
+$X\sim Poi(\lambda)$, $x\in\{0,1,\cdots\}$, $\lambda>0$
+\[p(x) = \frac{\lambda^x}{x!}e^{-\lambda}\]
+\subsection{Continuous Random Variables}
+$x$ is continuous random variable, $x$ takes values over continuous in $\R$ 
+\subsubsection*{Probability Density Function (PDF)}
+$f_X:\R\to[0,\infty)$, $\ds\int_{-\infty}^{\infty}f_X(x)dx=1$, $\ds F(x)=P(X\leq x)=\int_{-\infty}^{x}f_X(t)dt$, $f_X(x)=\ds\frac{dF(x)}{dx}$
+\begin{enumerate}
+    \item For continuous $x$, cdf $F(x)$ is continuous 
+    \item For any interval $B\subseteq\R$ \[P(x\in B)=\int_B f_X(x)dx\], if $B\in(-\infty,x]\rightarrow P(x\in B)=F(x)$
+\end{enumerate}
+\subsubsection*{Uniform Distribution}
+$X\sim U(a,b)$, $a<b$
+\begin{align*}
+    f_X(x) &= \begin{cases}
+        \ds\frac{1}{b-a} & a\leq x\leq b \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+\subsubsection*{Exponential Distribution}
+$X\sim Exp(\lambda)$, $\lambda>0$
+\begin{align*}
+    f_X(x) &= \begin{cases}
+        \ds\lambda e^{-\lambda x} & x\geq 0 \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+\subsubsection*{Erlang Distribution}
+$X\sim Erlang(n,\lambda)$, $n\in\{1,2,\cdots\}$, $\lambda>0$
+\begin{align*}
+    f_X(x) &= \begin{cases}
+        \ds\frac{\lambda^n}{(n-1)!}x^{n-1}e^{-\lambda x} & x\geq 0 \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+\subsubsection*{Gamma Distribution}
+$X\sim Gamma(\alpha,\lambda)$, $\alpha>0$, $\lambda>0$
+\begin{align*}
+    f_X(x) &= \begin{cases}
+        \ds\frac{\lambda^{\alpha}}{\Gamma(\alpha)}x^{\alpha-1}e^{-\lambda x} & x\geq 0 \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+\subsection{Expectation}
+$X$ is a continuous random variable, $g:\R\to\R$ is a function 
+\begin{align*}
+    E[g(X)] &= \begin{cases}
+        \ds\int_{-\infty}^{\infty}g(x)f_X(x)dx & \text{if } g(x) \text{ is continuous} \\
+        \ds\sum_{x\in\R}g(x)p_X(x) & \text{if } g(x) \text{ is discrete}
+    \end{cases}
+\end{align*}
+Some special $g(x)$
+\begin{enumerate}
+    \item $g(x)=x^n\Rightarrow E[g(X)] = E[X^n]$, $n^{th}$ moment of $X$ 
+    \item $\mu=E(X)$, $g(x)=(x-\mu)^2\Rightarrow E[g(X)]=E[(X-\mu)^2]=Var(X)$
+    \item $Var(X)=E(X^2)-[E(X)]^2$ 
+    \item $E(aX+b)=aE(X)+b$, $a,b\in\R$
+    \item $Var(aX+b)=a^2Var(X)$, $a,b\in\R$
+\end{enumerate}
+\subsection{Moment Generating Function (MGF)}
+\subsubsection*{Properties}
+\begin{itemize}
+    \item $M_X(t)=E[e^{tX}]$, $t\in\R$
+    \item $\dfrac{d^n}{dt}M_X(t)\bigg|_{t=0}=E[X^n]$ 
+    \item $x,y$ are two random variables and identically distributed iff $M_X(t)=M_Y(t)$
+    \item $x_1,x_2,\cdots,x_n$ are independent, then \[M_{X_1+X_2+\cdots+X_n}(t)=M_{X_1}(t)M_{X_2}(t)\cdots M_{X_n}(t) = \prod_{i=1}^{n}M_{X_i}(t)\]
+\end{itemize}
+\subsection{Joint Distribution}
+Two random variables $X$ and $Y$ defined on the same sample space \\
+cdf / Joint cdf: \[F_{X,Y}(x,y)=P(X\leq x, Y\leq y)\] 
+Marginal cdf: \[F_X(x)=P(X\leq x)=\lim_{y\to\infty}F_{X,Y}(x,y),\ F_Y(y)=P(Y\leq y)=\lim_{x\to\infty}F_{X,Y}(x,y)\]
+\subsubsection{Discrete Joint Distribution}
+Joint pmf: $p_{X,Y}(x,y)=P(X=x, Y=y)$ 
+\[P_X(x)=\sum_{y}p_{X,Y}(x,y),\ P_Y(y)=\sum_{x}p_{X,Y}(x,y)\] 
+\subsubsection{Continuous Joint Distribution}
+Joint pdf: $f_{X,Y}(x,y)=\dfrac{\partial^2}{\partial x \partial y}F_{X,Y}(x,y)$ 
+\[F_{X,Y}(x,y)=\int_{-\infty}^{x}\int_{-\infty}^{y}f_{X,Y}(t,s)dtds\]
+\subsection{Expectation}
+\begin{align*}
+    E[g(X,Y)] &= \begin{cases}
+        \ds\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}g(x,y)f_{X,Y}(x,y)dydx & \text{if } g(x,y) \text{ is continuous} \\
+        \ds\sum_{x\in\R}\sum_{y\in\R}g(x,y)p_{X,Y}(x,y) & \text{if } g(x,y) \text{ is discrete}
+    \end{cases}
+\end{align*}
+$E[g(X,Y)]$ exists if one of the following happens
+\begin{itemize}
+    \item $E[g(X,Y)]<\infty$
+    \item $g(X,Y)\geq0$
+    \item $g(X,Y)\leq0$
+\end{itemize}
+\subsection{Independence of Random Variables}
+$X$ and $Y$ are independent if $F_{X,Y}(x,y)=F_X(x)F_Y(y)$ \\
+For discrete case: \[P_{X,Y}(x,y)=P_X(x)P_Y(y)\] 
+For continuous case: \[f_{X,Y}(x,y)=f_X(x)f_Y(y)\]
+For expectation, if $X$ and $Y$ are independent, then \[E[g(X,Y)]=E[g(X)]E[g(Y)]\]
+\subsection{Covariance}
+\begin{align*}
+    Cov(X,Y) &= E[(X-\mu_X)(Y-\mu_Y)] \\
+             &= E[XY] - E[X]E[Y]
+\end{align*}
+\subsubsection{Properties}
+\begin{itemize}
+    \item If $X$ and $Y$ are independent, then $Cov(X,Y)=0$, but $Cov(X,Y)=0$ does not imply $X$ and $Y$ are independent
+    \item $X$ and $Y$ are independent, then $M_{X,Y}(t,s)=M_X(t)M_Y(s)$
+    \item $X$ and $Y$ are independent, then $Var(aX+bY)=a^2Var(X)+b^2Var(Y)$
+\end{itemize}
+\subsection{Convergence Modes}
+$X_1,X_2,\cdots$ is a sequence of random variables, $X$ is another random variable 
+\begin{enumerate}
+    \item $X_n\to X$ almost surely $P(X_n\to X)=1$. $\omega\in\Omega$ (one element of sample space), $X_n(\omega)\to X(\omega)$ as $n\to\infty$. $E=\{\omega\in\Omega: X_n(\omega)\to X(\omega)\}$, $P(E)=1$
+    \item $X_n\to X$ in probability if for any $\epsilon>0$, $P(|X_n-X|>\epsilon)\to 0$ as $n\to\infty$
+    \item $X_n\to X$ in distribution if $F_{X_n}(a)\to F_X(a)$ for every $a$ where $F_X(a)$ is continuous
+\end{enumerate}
+\subsubsection{Property}
+$X_n\to X$ almost surely $\Rightarrow$ $X_n\to X$ in probability $\Rightarrow$ $X_n\to X$ in distribution \\
+\textbf{Not the other way around}
+\subsection{Strong Law of Large Numbers (SLLN)}
+$X_1,X_2,\cdots$ are a sequence of iid random variables with $E(|X_1|)<\infty$, then 
+\[\dfrac{X_1+\cdots+X_n}{n}\to E(X_1)\text{ almost surely as }n\to\infty\]
+\newpage 
+
+\section{Conditional Distributions and Conditional Expectation}
+\subsection{Conditional Probability}
+\subsubsection*{Discrete Case}
+$X_1,X_2$ are discrete random variables, the conditional pmf of $X_1$ given $X_2$ is
+\[P_{X_1|X_2}(x_1|x_2)=P(X_1=x_1|X_2=x_2)=\frac{P(X_1=x_1,X_2=x_2)}{P(X_2=x_2)}\]
+is defined only when $P(X_2=x_2)>0$ 
+\subsubsection*{Properties}
+If $P_{X_1}(x_1), P_{X_2}(x_2)>0$, 
+\[P_{X_2|X_1}(x_2|x_1)=\frac{P_{X_1|X_2}(x_1|x_2)P_{X_2(x_2)}}{P(X_1=x_1)}\]
+If $X_1,X_2,X_3$ are discrete and $P_{X_3}(x_3)>0$, then
+\[P_{X_1,X_2|X_3}(x_1,x_2|x_3)=\frac{P_{X_1,X_2,X_3}(x_1,x_2,x_3)}{P_{X_3}(x_3)}\]
+\subsubsection*{Continuous Case}
+$X$ and $Y$ are two continuous random variables, 
+\[f_{X,Y}(x,y): \text{joint pdf of }X,Y\]
+\[f_X(x), f_Y(y): \text{marginal pdf of }X,Y\]
+The conditional pdf of $X|Y=y$ is 
+\[f_{X|Y}(x|y)=\frac{f_{X,Y}(x,y)}{f_Y(y)}\]
+is defined only when $f_Y(y)>0$
+\subsubsection*{Properties}
+Assume that both $f_X(x)$ and $f_Y(y)$ are positive, then
+\begin{enumerate}
+    \item $\displaystyle f_{Y|X}(y|x)=\frac{f_{X|Y}(x|y)f_Y(y)}{f_X(x)}$
+    \item $\displaystyle f_X(x)=\int f_{X|Y}(x|y)f_Y(y)dy$
+    \item $\displaystyle f_Y(y)=\int f_{Y|X}(y|x)f_X(x)dx$
+    \item $\displaystyle f_{Y|X}(y|x) = \frac{f_{X|Y}(x|y)f_Y(y)}{\int f_{X|Y}(x|y)f_Y(y)dy}$
+\end{enumerate}
+\subsection{Conditional Expectation}
+\subsubsection*{Discrete Case}
+\[E[X_1|X_2=x_2]=\sum_{x_1}x_1P_{X_1|X_2}(x_1|x_2)\]
+More generally, if $w(\cdot,\cdot)$, $h(\cdot)$, and $g(\cdot)$ are functions, then
+\[E(w(X_1,X_2)|X_2=x_2)=E(w(X_1,x_2)|X_2=x_2)=\sum_{x_1}w(x_1,x_2)P_{X_1|X_2}(x_1|x_2)\]
+and 
+\[E(g(X_1)h(X_2)|X_2=x_2)=E[g(X_1)h(x_2)|X_2=x_2]=h(x_2)E[g(X_1)|X_2=x_2]\]   
+\[E[ag(X_1)+bh(X_1)|X_2=x_2]=aE[g(X_1)|X_2=x_2]+bE[h(X_1)|X_2=x_2]\]
+\subsubsection*{Properties}
+If $X_1,X_2,\cdots,X_n,Y$ jointly discrete random variables, and $P_Y(y)>0$, and for any $a_1,\cdots,a_n\in\R$, then
+\[E[a_1X_1+a_2X_2+\cdots+a_nX_n|Y=y]=\sum_{i=1}^{n}a_iE[X_i|Y=y]\]
+\subsubsection*{Continuous Case}
+$E[g(Y)|X=x] = \ds\int g(y)f_{Y|X}(y|x)dy$ 
+Special case: 
+\begin{itemize}
+    \item $g(y)=y$, then $E[Y|X=x]=\ds\int yf_{Y|X}(y|x)dy$
+    \item $g(y)=(Y-E[Y|X=x])^2$, then $E[(Y-E[Y|X=x])^2|X=x]=Var(Y|X=x)$
+\end{itemize}
+\subsection{Independence}
+If $X_1,X_2$ are independent, then 
+\begin{itemize}
+    \item $P_{X_1|X_2}(x_1|x_2)=P_{X_1}(x_1)$
+    \item $E[X_1|X_2]=E[X_1]$
+\end{itemize}
+\subsection{Mix of Discrete and Continuous Random Variables}
+$X$ is continuous random variable, and $Y$ is discrete random variable \\
+Situation 1: $f_X(x)$ and $P_{Y|X}(y|x)$ are given, then 
+\[f_{X|Y}(x|y) = \frac{f_{X,Y}(x,y)}{P_Y(y)}=\frac{f_X(x)P_{Y|X}(y|x)}{P_Y(y)}\]
+Situation 2: $P_Y(y)$ and $f_{X|Y}(x|y)$ are given, then
+\[P_{Y|X}(y|x)=\frac{f_{X|Y}(x|y)P_Y(y)}{f_X(x)}\]
+\subsection{Compute Expectation by Conditioning}
+$X$ and $Y$ are two random variables, and $g:\R\to\R$, then 
+\[E[g(X)]=E[E[g(X)|Y]]\]
+\subsubsection*{Thoerem}
+If $X$ and $Y$ are two random variables, then 
+\[Var(X)=E[Var(X|Y)]+Var(E[X|Y])\]
+\subsection{Calculating Probabilities using Conditioning}
+Suppose we have two continuous random variables $X$ and $Y$
+\begin{align*}
+    P(X<Y) &= \int P(X<Y|Y=y)f_Y(y)dy \\
+           &= \int P(X<y|Y=y)f_Y(y)dy \\
+           &\text{if $X$ and $Y$ are independent} \\
+           &= \int F_X(y)f_Y(y)dy \\
+           &= E[F_X(Y)]
+\end{align*}
+If $X$ and $Y$ are identically distributed, then
+\begin{align*}
+    P(X<Y) &= \int P(X<Y|Y=y)f_Y(y)dy \\
+           &= \int P(Y>X|Y=y)f_Y(y)dy \\
+           &= \int (1-F_X(y))f_Y(y)dy \\
+           &= 1-E[F_X(Y)] \\
+           &= 1/2
+\end{align*}
+
+\newpage 
+\section{Discrete-Time Markov Chains}
+\subsection{Definitions and Basic Concepts}
+\subsubsection{Stochastic Process}
+$\{X(t),t\in T\}$ is called a stochastic process if $X(t)$ is a rv for any given $t\in T$. $T$ is referred to as the index set and is often interpreted in the context of time 
+\subsubsection{Discrete-Time Markov Chain (DTMC), Markov Property}
+A stochastic process $\{X_n,n\in\N\}$ is said to be a discrete-time Markov chain if the following conditions hold true:
+\begin{itemize}
+    \item For $n\in\N$, $X_n$ is discrete rv 
+    \item For $n\in\N$ and all states $x_0,x_1,\cdots,x_{n+1}\in S$, the Markov property must hold:
+    \[P(X_{n+1}=x_{n+1}|X_n=x_n,X_{n-1}=x_{n-1},\cdots,X_0=x_0)=P(X_{n+1}=x_{n+1}|X_n=x_n)\]
+    The current state $X_n$ contains all the information needed to predict the next state $X_{n+1}$, regardless of the previous states $X_{n-1},\cdots,X_0$
+\end{itemize}
+\subsubsection{Transition Probability}
+For any pair of states $i$ and $j$, the transition probability from state $i$ at time $n$ to state $j$ at time $n+1$ is given by 
+\[P_{n,i,j}=P(X_{n+1}=j|X_n=i)\]    
+\subsubsection{Stationary Transition Probability}
+A DTMC is called stationary or homogeneous if the transition probabilities do not depend on time 
+\[P(X_n=j|X_{n-1} = i) = P(X_{n-1}=j|X_{n-2} = i) = \cdots = P(X_1=j|X_0=i) = P_{i,j}\]
+\subsubsection{Transition Probability Matrix}
+\subsubsection*{One Step Transition Probability Matrix}
+Let $P_n$ be the associated matrix containing all these transition probabilities, referred to as the one-step transition probability matrix (TPM) from time $n$ to time $n+1$. It looks like 
+\begin{align*}
+    P_n = [P_{n,i,j}] = 
+    \begin{bmatrix}
+        P_{n,0,0} & P_{n,0,1} & \cdots & P_{n,0,j} \\
+        P_{n,1,0} & P_{n,1,1} & \cdots & P_{n,1,j} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        P_{n,i,0} & P_{n,i,1} & \cdots & P_{n,i,j} \\
+        \vdots & \vdots & \ddots & \vdots 
+    \end{bmatrix}
+\end{align*}
+\subsubsection*{Stationary and Homogeneous}
+For each pair of states $i$ and $j$, if $P_{n,i,j}$ does not depend on $n$, $P_{n,i,j}=P_{i,j}$, $\forall n\in\N$, then we say the DTMC is stationary or homogeneous, one-step TPM is 
+\begin{align*}
+    P = [P_{i,j}] =
+    \begin{bmatrix}
+        P_{0,0} & P_{0,1} & \cdots & P_{0,j} \\
+        P_{1,0} & P_{1,1} & \cdots & P_{1,j} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        P_{i,0} & P_{i,1} & \cdots & P_{i,j} \\
+        \vdots & \vdots & \ddots & \vdots
+    \end{bmatrix}
+\end{align*}
+\begin{align*}
+    P_{n,i,j}&=P(X_{n+1}=j|X_n=i)\\
+    &= P(X_1=j|X_0=i) \\
+    &= P_{i,j} 
+\end{align*}
+\subsubsection*{N-Step Transition Probability}
+For any pair of states $i$ and $j$, the n-step transition probability is given by 
+\[P_{i,j}^{(n)} = P(X_n = j | X_0 = i) = P(X_{m+n}=j|X_m=i)\quad m,n\in\N\]
+Due to stationary assumption, this quantity is actually independent of $m$. Thus $P_{i,j}^{(n)} = P(X_n=j|X_0=i), n\in\N$ 
+\begin{align*}
+    P_{i,j}^{(n)} = P(X_0=j|X_0=i) = \begin{cases}
+        0 & \text{if } i\neq j \\
+        1 & \text{if } i=j
+    \end{cases}
+\end{align*} 
+\subsubsection{Properties of Stationary Transition Matrix}
+Say $P = [P_{i,j}]_{i,j\in S}$ is stationary transition matrix, then 
+\begin{itemize}
+    \item $P_{i,j}\geq 0$ 
+    \item $\sum_j P_{i,j}=1$ 
+\end{itemize}
+\subsubsection{Chapman-Kolmogorov Equation}
+For $n\in\Z^+$ 
+\begin{align*}
+    P_{ij}^{(n)} &= P(X_n=j|X_0=i) \\ 
+                 &= \sum_{k=0}^\infty P(X_n=j|X_{n-1}=k,X_0=i) P(X_{n-1}=k|X_0=i) \\
+                 &= \sum_{k=0}^{\infty} P_{i,k}^{(n-1)}P(X_n=j|X_{n-1}=k,X_0=i) \\
+                 &= \sum_{k=0}^{\infty} P_{i,k}^{(n-1)}P(X_n=j|X_{n-1}=k) \\
+                 &= \sum_{k=0}^{\infty} P_{i,k}^{(n-1)}P_{k,j}
+\end{align*}
+More generality, for $m,n\in\Z^+$,
+\[P_{i,j}^{(m+n)} = \sum_{k\in S}P_{ik}^{(m)}P_{kj}^{(n)}\]
+\subsubsection*{Property}
+\[P^{(n)} = P\cdot P^{(n-1)} = P^n\]
+\subsubsection{Initial Distribution \& n-Step Distribution}
+$\alpha_0$: the vector consisting of all the pmf of $X_0$, the initial distribution of DTMC \\
+$\alpha_n$: the vector consisting of all the pmf of $X_n$, the n-step distribution of DTMC 
+\[\alpha_n = \alpha_0\cdot P^{(n)} = \alpha_0\cdot P^n\] 
+\subsubsection{Accessible, Communicate}
+State $j$ is accessible from state $i$ (denote by $i\to j$) if $\exists n\in\N$ such that 
+$P_{i,j}^{(n)}>0$. If states $i$ and $j$ are accessible from each other, then states $i$ and $j$ communicate (denote by $i\leftrightarrow j$), 
+$i\leftrightarrow j$ iff $\exists m,n\in\N$ such that $P_{i,j}^{(n)}>0$ and $P_{j,i}^{(m)}>0$.
+\subsubsection{Equivalence Relation}
+The concept of communication forms what is known as an equivalence relation, satisfying the following 
+\begin{itemize}
+    \item Reflexivity: $i\leftrightarrow i$
+    \item Symmetry: $i\leftrightarrow j \Rightarrow j\leftrightarrow i$
+    \item Transitivity: $i\leftrightarrow j$ and $j\leftrightarrow k \Rightarrow i\leftrightarrow k$
+\end{itemize}
+\subsubsection{Communication Class}
+Within the same communication class, all states communicate with each other \\
+If states $i$ and $j$ belongs to different communication classes, then $i\leftrightarrow j$ is not true, at most one of $i\to j$ or $j\to i$ can be true 
+\subsubsection{Reducible, Irreducible}
+A DTMC that has only one communication class is said to be irreducible. On the other hand, a DTMC is 
+called reducible if there are two or more communication classes 
+\subsubsection{Period}
+The period of state $i$ is given by $d(i) = \gcd\{n\in\Z^+: P_{i,i}^{(n)}>0\}$
+\subsubsection*{Aperiodic}
+If $d(i)=1$, then state $i$ is said to be aperiodic. In fact, DTMC is said to be aperiodic if $d(i)=1$ for all $n\in\N$. Furthermore,
+if $P_{i,i}^{(n)}=0$ for all $n\in\Z^+$, then we set $d(i)=\infty$ 
+\subsubsection{Theorem}
+If $i\leftrightarrow j$, then $d(i)=d(j)$
+\subsection{Transience and Recurrence}
+The first visit of the DTMC to state $j$ occurs at time $n\in\Z^+$ 
+\begin{align*}
+    f_{i,j}^{(n)} &= P(\text{DTMC makes a future visit to state } j \text{ at time } n|X_0=i) \\
+    &= P(X_n=j, X_{n-1}\neq j, X_{n-2}\neq j, \cdots, X_1\neq j | X_0=i) \\
+    f_{ii}^{(n)} &= P(X_n=i, X_{n-1}\neq i, X_{n-2}\neq i, \cdots, X_1\neq i | X_0=i) \\
+    f_{ii}^{(0)} &= 0
+\end{align*}
+Result: 
+\[f_{ij}^{(n)} = P_{ij}^{(n)} - \sum_{k=1}^{n-1}f_{ij}^{(k)}P_{jj}^{(n-k)}\]    
+\subsubsection*{Definition}
+\[f_{ij} = P(\text{DTMC ever makes a visit to state } j|X_0=i)\]    
+\[T_i^{(n)}: \text{time for DRMC to makes n-th visit at state } i\]    
+\[f_{i,j}^{(n)} = P(T_j^{(n)} = n | X_0=i)\]    
+\subsubsection{Transient, Recurrent}
+State $i$ is said to be transient if $f_{i,i}<1$. State $i$ is said to be recurrent if $f_{i,i}=1$
+\subsubsection*{Definition}
+$M_i$: number of times a DTMC make a visit to state $i$
+\begin{align*}
+    A_n^{(i)} = 
+    \begin{cases}
+        1 & \text{if } X_n=i \\
+        0 & \text{if } X_n\neq i
+    \end{cases}
+\end{align*}
+\[M_i = \sum_{n=0}^{\infty}A_n^{(i)}\]
+Given $X_0=i$, 
+\begin{itemize}
+    \item if state $i$ is recurrent, then $M_i=\infty$ with probability $1$
+    \item if state $i$ is transient, then $M_i\sim Geo_f(1-f_{ii})$
+\end{itemize}
+\subsubsection*{Definition}
+$T_i^{(n)}$: time at n-th arrival to state $i$ 
+\begin{align*} 
+    I_i^{(n)} &= T_i^{(n)} - T_i^{(n-1)} \\
+    &= \text{time between the } (n-1)^{th} \text{ and } n^{th} \text{ visit to state } i
+\end{align*}
+Define $T_i^{(0)}=0$ \\
+Then $T_i^{(1)} = I_i^{(1)}$, $T_i^{(n)} = I_i^{(1)} + I_i^{(2)} + \cdots + I_i^{(n)}$ 
+\[f_{ii} = P(T_i^{(1)}<\infty|X_0=i) = P(I_i^{(1)}<\infty|X_0=i)\]   
+\subsubsection*{Theorem}
+For a DTMC with stationary transition probability, the following holds
+\begin{itemize}
+    \item given $X_0=i$, the inter arrival time $I_1^{(1)}, I_1^{(2)},\cdots$ are iid integer valued random variables 
+    \item if state $i$ is transient, then $M_i\sim Geo_f(1-f_{ii})$, where $M_i$ is number of arrivals at state $i$ 
+    \item if state $i$ is recurrent, then $M_i = \infty$ with probability 1 
+\end{itemize}
+\subsubsection*{Corollary}
+\begin{align*}
+    M_i^{(n)} &= 
+    \begin{cases}
+        1 &\text{if } X_n=i \\
+        0 &\text{if } X_n\neq i 
+    \end{cases} \\
+    &= \dso \{X_n=i\}
+\end{align*}
+\[M_i = \sum_{n=1}^{\infty}\dso \{X_n=i\}\]
+Then 
+\begin{align*}
+    E[M_i|X_0=i] &= E\left[\sum_{n=1}^{\infty}\dso \{X_n=i\}|X_0=i\right] \\
+                 &= \sum_{n=1}^{\infty}E\left[\dso \{X_n=i\}|X_0=i\right] \\
+                 &= \sum_{n=1}^{\infty}P(X_n = i|X_0=i) \\
+                 &= \sum_{n=1}^{\infty}P_{i,i}^{(n)}
+\end{align*}
+\begin{itemize}
+    \item If state $i$ is transient \[E[M_i|X_0=i] = \sum_{n=1}^{\infty}P_{i,i}^{(n)} < \infty\]
+    \item If state $i$ is recurrent \[E[M_i|X_0=i] = \sum_{n=1}^{\infty}P_{i,i}^{(n)} = \infty\]
+    \item A state is recurrent iff \[\sum_{n=1}^{\infty}P_{i,i}^{(n)} = \infty\] 
+    \item Symmetric random walk on $\Z$ is recurrent, but asymmetric random walk are transient 
+\end{itemize}
+\subsubsection*{Theorem}
+If $i\leftrightarrow j$ and state $i$ is recurrent, then state $j$ is also recurrent \\
+If $i\leftrightarrow j$ and state $i$ is transient, then state $j$ is also transient
+\subsubsection*{Theorem}
+If $i\leftrightarrow j$ and state $i$ is recurrent, then 
+\[f_{i,j} = P(\text{DTMC ever makes a future visit to state } j|X_0=i)=1\] 
+\subsubsection*{Finite DTMC}
+DTMC is called finite if the total number of states is finite 
+\subsubsection*{Theorem}
+Consider a finite DTMC 
+\begin{itemize}
+    \item At least one of the states is recurrent 
+    \item If the chain is irreducible, then the DTMC is recurrent, means all states of the DTMC are recurrent 
+    \item If the chain is not irreducible, then it has at least one recurrence class 
+\end{itemize}
+A finite-state DTMC has at least one recurrent state \\
+An irreducible, finite-state DTMC must be recurrent 
+\subsubsection*{Theorem}
+If state $i$ is recurrent and state $i$ does not communicate with state $j$, then $P_{i,j}^{(k)}=0$ for all $k\in\Z^+$ 
+\subsubsection*{Theorem}
+If $i\to j$ and $i$ is recurrent, then 
+\begin{itemize}
+    \item $j\to i$
+    \item $i\leftrightarrow j$ and $j$ is recurrent 
+    \item $f_{i,j} = P(X_n=j\text{ for some }n\geq 1|X_0=i) = 1$, $f_{j,i} = 1$
+\end{itemize}
+\subsection{Limiting Behaviour of DTMCs}
+\subsubsection*{Theorem}
+For any state $i$ and transient state $j$ of a DTMC, $\ds\lim_{n\to\infty}P_{i,j}^{(n)} = 0$
+\subsubsection*{Definition}
+Let 
+\[N_i=\min\{n\in\Z^+:X_n=i\}\]   
+where state $i$ is assumed to be recurrent. The first return time to state $i$ is defined as 
+\[T_i^{(1)} = N_i\]   
+The conditional pmf is given by 
+\[P(N_i=n|X_0=i)=f_{i,i}^{(n)}, n=1,2,3,\cdots\]    
+\subsubsection{Mean Recurrent Time}
+If state $i$ is recurrent, then its mean recurrent time is given by 
+\[m_i = E[N_i|X_0=i] = \sum_{n=1}^{\infty}n f_{i,i}^{(n)}\]   
+In words, $m_i$ represents the average time it takes the DTMC to make successive visits to state $i$. 
+\subsubsection{Positive Recurrent, Null Recurrent}
+Suppose that state $i$ is recurrent. State $i$ is said to be positive recurrent if $m_i<\infty$. On the other hand, state $i$ is said to be null recurrent if $m_i=\infty$
+\subsubsection*{Theorem}
+\begin{itemize}
+    \item If $i\leftrightarrow j$ and state $i$ is positive recurrent, then state $j$ is also positive recurrent 
+    \item If $i\leftrightarrow j$ and state $i$ is null recurrent, then state $j$ is also null recurrent
+    \item In a finite state DTMC, all recurrent states are positive recurrent
+    \item In a finite state DTMC, at least one state is positive recurrent
+\end{itemize}
+\subsubsection{Stationary Distribution}
+A probability distribution $\{p_i\}_{i=0}^{\infty}$ is called a stationary distribution of a DTMC if 
+$\{p_i\}_{i=0}^{\infty}$ satisfies the conditions $\ds\sum_{i=0}^{\infty}p_i=1$ and $p_j=\ds\sum_{i=0}^{\infty}p_iP_{i,j}$ for all $j\in\N$
+\[\pi P = \pi\]
+\subsubsection{Convex Combination}
+For any 2 vectors $\pi_1 = (\pi_{11},\pi_{12},\cdots,\pi_{1n})$ and $\pi_2 = (\pi_{21},\pi_{22},\cdots,\pi_{2n})$, a convex combination of $\pi_1$ and $\pi_2$ is given by
+\[\alpha\pi_1 + (1-\alpha)\pi_2\quad 0\leq\alpha\leq 1\]
+\subsubsection*{Result}
+For any 2 stationary distributions $\pi_1$ and $\pi_2$, the convex combination $\alpha\pi_1 + (1-\alpha)\pi_2$ where $0\leq\alpha\leq1$ is another stationary distribution 
+\begin{align*}
+    (\alpha\pi_1 + (1-\alpha)\pi_2)P = \alpha\pi_1 + (1-\alpha)\pi_2
+\end{align*}
+\subsubsection*{Theorem}
+$T_x^{(1)}$: time to first return to state $x$
+\[m_x = E[T_x^{(1)}|X_0=x]\] 
+\[f_{xy} = P(X_n = y, n\geq 1|X_0=x)\]   
+\[\frac{1}{n}\sum_{n=1}^{n}P_{x,y}^{(n)}\rightarrow \frac{f_{xy}}{m_y}\quad n\to\infty\]   
+\begin{itemize}
+    \item $m_y = \infty$ if $y$ is transient or null recurrent
+    \item $m_y < \infty$ if $y$ is positive recurrent
+\end{itemize}
+\subsubsection*{Theorem}
+If the DTMC is 
+\begin{itemize}
+    \item irreducible 
+    \item aperiodic 
+    \item positive recurrent 
+\end{itemize}
+Then the stationary distribution is unique and 
+\[\lim_{n\to\infty}P_{x,y}^{(n)} = \pi_y = \frac{1}{m_y}\]    
+\[\lim_{n\to\infty}P(X_n=x) = \pi_x = \frac{1}{m_x}\]    
+For a positive recurrent state $y$, the expected return time is 
+\[m_y = \frac{1}{\pi_y}\]    
+\subsubsection*{Result}
+\begin{itemize}
+    \item Stationary distribution exists iff at least one of the state is positive recurrent
+    \begin{itemize}
+        \item For finite DTMC, at least one state is positive recurrent, hence stationary distribution always exists 
+    \end{itemize}
+    \item If more than one positive recurrent classes, then stationary distribution is not unique 
+    \item For finite chain the stationary distribution is unique if it has only one positive recurrent class 
+\end{itemize}
+\subsubsection{Basic Limit Theorem}
+For an irreducible, recurrent, and aperiodic DTMC, $\ds\lim_{n\to\infty}P_{i,j}^{(n)}$ exists 
+and is independent of state $i$, satisfying 
+\[\lim_{n\to\infty}P_{i,j}^{(n)}=\pi_j=\frac{1}{m_j}\quad\forall i,j\in\N\]    
+If the DTMC also happens to be positive recurrent, then $\{\pi_j\}_{j=0}^{\infty}$ is the unique, positive solution
+to the system of linear equations defined by 
+\begin{align*}
+    \begin{cases}
+        \pi_j = \sum_{i=0}^{\infty}\pi_i P_{i,j} & \forall j\in\N \\
+        \sum_{j=0}^{\infty}\pi_j = 1
+    \end{cases}
+\end{align*}
+\subsubsection*{Theorem}
+Suppose that a finite-state DTMC with state space $S=\{0,1,\cdots,N-1\}$ is irreducible and aperiodic.
+If the associated TPM is doubly stochastic, then the limiting probabilities $\{\pi_j\}_{j=0}^{N-1}$ exist 
+and are given by 
+\[\pi_j = \frac{1}{N}\quad j=0,1,\cdots,N-1\]    
+\subsubsection{Probability Generating Function}
+\begin{align*}
+    \alpha(t) &= \sum_{j=0}^{\infty}t^j\alpha_j \\
+    &= E[t^{Z_{0,1}}]
+\end{align*}
+\[\frac{d^n}{dt^n}(\alpha(t))\bigg|_{t=0} = (n!)\cdot \alpha_n\]
+Let $\pi_0 = P(X_n=0\text{ for some } n\geq1|X_0=1)$ 
+\begin{itemize}
+    \item $1$ is a solution to $\pi_0=\alpha(\pi_0)$
+    \item $\pi_0$ is a solution to the equation \[t=\alpha(t)\]
+    \item $f(t) = \alpha(t)-t$ is a convex function in $[0,1]$
+    \item Since $f(t) = \alpha(t)-t$ is strictly convex, smooth and non constant inside $[0,1]$, the equation $f(t)=0$ has at most two solution in $[0,1]$
+\end{itemize}
+\subsubsection*{Theorem}
+$\pi_0 = \ds\lim_{n\to\infty}P(X_n=0)$ is the smallest solution of $t=\alpha(t)$ within the interval $[0,1]$
+
+\newpage 
+
+\section{The Exponential Distribution and the Poisson Process}
+\subsection{Properties of the Exponential Distribution}
+If a rv $X$ has an exponential distribution with parameter $\lambda>0$ ($X\sim Exp(\lambda)$ where $\lambda$ is often referred to as the "rate"),
+then we have the following distributional results 
+\begin{itemize}
+    \item pdf: $f(x) = \lambda e^{-\lambda x}, x\geq 0$
+    \item cdf: $F(x) = 1-e^{-\lambda x}, x\geq 0$
+    \item tpf: $\overline{F}(x) = e^{-\lambda x}, x\geq 0$
+    \item mgf: $\phi_X(t) = \frac{\lambda}{\lambda-t}, t<\lambda$
+    \item mean: $E[X] = \frac{1}{\lambda}$
+    \item variance: $Var(X) = \frac{1}{\lambda^2}$
+\end{itemize}
+\subsubsection*{Minimum of Independent Exponential}
+Let $\{X_i\}_{i=1}^n$ be a sequence of independent rvs where $X_i\sim Exp(\lambda_i)$, $i=1,2,\cdots,n$. Define $Y=\min\{X_1,X_2,\cdots,X_n\}$ to be the smallest order statistic of $\{X_1,\cdots,X_n\}$. Then 
+\[Y=\min\{X_1,X_2,\cdots,X_n\}\sim Exp(\sum_{i=1}^{n}\lambda_i)\]
+\subsubsection*{Usuful Result}
+Let $\{X_i\}_{i=1}^n$ be a sequence of independent rvs where $X_i\sim Exp(\lambda_i)$, $i=1,2,\cdots,n$ 
+\begin{itemize}
+    \item For $j\in\{1,2,\cdots,n\}$ \[P(X_j = \min\{X_1,X_2,\cdots,X_n\})  = \frac{\lambda_j}{\sum_{i=1}^{n}\lambda_i}\]
+    \item \[P(X_1<X_2<\cdots<X_n) = \frac{\prod_{i=1}^{n-1}\lambda_i}{\prod_{i=1}^{n-1}\left(\sum_{j=i}^{n}\lambda_j\right)}\]
+\end{itemize}
+\subsubsection{Memoryless Property}
+A rv $X$ is memoryless iff 
+\[P(X>y+z|X>y) = P(X>z)\quad\forall y,z\geq 0\]
+$X$ is memoryless iff 
+\[P(X>y+z) = P(X>y)P(X>z)\quad\forall y,z\geq 0\]
+\subsubsection*{Theorem}
+An exponential distribution is memoryless
+\subsubsection*{Theorem}
+If $X_1\sim Exp(\lambda_1)$ and $X_2\sim Exp(\lambda_2)$ are independent rvs, then
+\[P(X_1<X_2) = \frac{\lambda_1}{\lambda_1+\lambda_2}\] 
+\subsubsection*{Useful Results}
+If $X\sim Exp(\lambda)$
+\[P(X>Y+Z|X>Y) = P(X>Z)\]
+If $X\sim Exp(\lambda)$, then 
+\[P(X-Y>z|X>Y) = P(X>z)\]
+\[(X-Y)|(X>Y)\sim Exp(\lambda)\]
+\subsection{The Poisson Process}
+A counting process $\{N(t),t\geq0\}$ is a stochastic process in which $N(t)$ represents the number of events that happen (or occur) by time $t$, where the index $t$ measures time over a continuous range 
+\subsubsection*{Basic Properties of Counting Processes}
+\begin{itemize}
+    \item $N(0)=0$
+    \item $N(t)$ is a non-negative integer $\forall t\geq0$ ($N(t)\in\N\quad\forall t\geq0$)
+    \item If $s<t$, then $N(s)\leq N(t)$
+    \item $N(t)-N(s)$ counts the number of events to occur in the time interval $(s,t]$ for $s<t$
+\end{itemize}
+\subsubsection{Independent Increments}
+A counting process $\{N(t),t\geq0\}$ has independent increments if $N(t_1)-N(s_1)$ is independent of 
+$N(t_2)-N(s_2)$ whenever $(s_1,t_1]\cap(s_2,t_2]=\emptyset$ for all choices of $s_1,t_1,s_2,t_2$
+\subsubsection{Stationary Increments}
+A counting process $\{N(t),t\geq0\}$ has stationary increments if the distribution of the number of 
+events in $(s,s+t]$ depends only on $t$, the length of the time interval. $N(s+t)-N(s)$ has the same probability distribution as $N(t)-N(0)=N(t)$, the number of events occurring in the interval $[0,t]$
+\subsubsection{Of order $h$}
+A function $y=f(x)$ is said to be "$o(h)$" (of order $h$) if 
+\[\lim_{h\to0} \frac{f(x)}{h} = 0\]
+\subsubsection{Poisson Process}
+A counting process $\{N(t),t\geq 0\}$ is said to be a Poisson process at rate $\lambda$ if the following three conditions hold true 
+\begin{itemize}
+    \item The process has both independent and stationary increments 
+    \item For $h>0$, $P(N(h)=1) = \lambda h + o(h)$
+    \item For $h>0$, $P(N(h)\geq 2)=o(h)$
+\end{itemize}
+\subsubsection*{Theorem}
+If $\{N(t),t\geq0\}$ is a Poisson process at rate $\lambda$, then 
+\[N(t)\sim Poi(\lambda t)\]
+\subsubsection{Interarrival Times}
+Define $T_1$ to be the elapsed time (from time $0$) until the first event occurs. In general, for $i\geq2$, let $T_i$ be the elapsed time between 
+the occurences of the $(i-1)^{th}$ and $i^{th}$ events. The sequence $\{T_i\}_{i=1}^{\infty}$ is called
+the interarrival or interevent time sequence 
+\subsubsection*{Theorem}
+If $\{N(t),t\geq0\}$ is a Poisson process at rate $\lambda>0$, then $\{T_i\}_{i=1}^{\infty}$ is a sequence 
+of i.i.d. $Exp(\lambda)$ rvs 
+\[S_n = \sum_{i=1}^{n}T_i\sim Erlang(n,\lambda)\]
+\[P(S_n>t) = e^{-\lambda t}\sum_{j=0}^{n-1}\frac{(\lambda t)^j}{j!}, t\geq 0\]
+\subsection{Further Properties of the Poisson Process}
+\subsubsection*{Theorem}
+If $\{N(t),t\geq0\}$ is a Poisson process at rate $\lambda$, then 
+\[N(s)|(N(t)=n)\sim Bin(n,s/t)\]
+where $s<t$
+\subsubsection{Comparison of Event Occurences}
+Suppose that $\{N_1(t),t\geq0\}$ and $\{N_2(t),t\geq0\}$ are independent Poisson process at rate $\lambda_1$ and $\lambda_2$ respectively. 
+Let $S_m^{(1)}$ be the arrival time of the $m$-th event for $\{N_1(t),t\geq0\}$ and $S_n^{(2)}$ be the arrival time of the $n$-th event for $\{N_2(t),t\geq0\}$. 
+We know that $S_m^{(1)} = \sum_{i=1}^{m}T_i^{(1)}$ where $\{T_i^{(1)}\}_{i=1}^{\infty}$ is a sequence of iid $Exp(\lambda_1)$ rvs and $S_n^{(2)} = \sum_{j=1}^{n}T_j^{(2)}$ where $\{T_j^{(2)}\}_{j=1}^{\infty}$ is a sequence of iid $Exp(\lambda_2)$ rvs. 
+Then the following holds true\\
+The probability of observing $m$ success occur before $n$ failure in a sequence of independent Bernoulli trials
+\[P(S_m^{(1)}<S_n^{(2)}) = \sum_{j=0}^{n-1}\binom{m+j-1}{m-1}\left(\frac{\lambda_1}{\lambda_1+\lambda_2}\right)^m\left(\frac{\lambda_2}{\lambda_1+\lambda_2}\right)^j\]
+\subsubsection*{Theorem}
+Suppose that $\{N(t),t\geq0\}$ is a Poisson process at rate $\lambda$. Given $N(t)=1$, the conditional 
+distributino of the first arrival time is uniformly distributed on $(0,t)$ 
+\[S_1|(N(t)=1)\sim U(0,t)\]
+\subsubsection{Order Statistics}
+The sequence of rvs $\{Y_{(1)},Y_{(2)},\cdots,Y_{(n)}\}$ are called the order statistics of $\{Y_1,Y_2,\cdots,Y_n\}$, satisfying 
+\begin{align*}
+    Y_{(1)} &\equiv \text{1st smallest among } \{Y_1,Y_2,\cdots,Y_n\} \\
+    Y_{(2)} &\equiv \text{2nd smallest among } \{Y_1,Y_2,\cdots,Y_n\} \\
+    &\vdots \\
+    Y_{(n)} &\equiv \text{nth smallest among } \{Y_1,Y_2,\cdots,Y_n\}
+\end{align*}
+\subsubsection*{Theorem}
+Let $\{N(t),t\geq0\}$ be a Poisson process at rate $\lambda$. Given $N(t)=n$, the conditional joint distribution 
+of the $n$ arrival times is identical to the joint distribution of the $n$ order statistics from the $U(0,t)$ distributino 
+\[(S_1,S_2,\cdots,S_n)|(N(t)=n)\sim (Y_{(1)},Y_{(2)},\cdots,Y_{(n)})\]
+where $\{Y_i\}_{i=1}^{n}$ is an i.i.d. sequence of $U(0,t)$ rvs
+\subsection{Two Important Generalizations}
+\subsubsection{The Non-Homogeneous Poisson Process}
+The counting process $\{N(t),t\geq0\}$ is a non-homogeneous (non-stationary) Poisson process with rate function $\lambda(t)$ if the 
+following three conditions hold true 
+\begin{itemize}
+    \item $\{N(t),t\geq0\}$ has independent increments
+    \item $P(N(t+h)-N(t)=1) = h\lambda(t) + o(h)$
+    \item $P(N(t+h)-N(t)\geq 2)=o(h)$
+\end{itemize}
+\subsubsection*{Theorem}
+If $\{N(t),t\geq0\}$ is a non-homogeneous Poisson process with rate functionn $\lambda(t)$, then 
+$N(s_1+s_2)-N(s_1)\sim Poi(m(s_1+s_2)-m(s_1))$ where the mean value function $m(t)$ is given by 
+\[m(t) = \int_{0}^{t}\lambda(\tau)d\tau,\quad t\geq0\]
+\subsubsection{The Compound Poisson Process}
+Let $\{Y_i\}_{i=1}^{\infty}$ be an i.i.d. sequence of rvs. Let $\{N(t),t\geq0\}$ be a Poisson process 
+at rate $\lambda$, independent of each $Y_i$, $i=1,2,\cdots$. If $X(t)=\sum_{i=1}^{N(t)}Y_i$, then the 
+process $\{X(t),t\geq0\}$ is a compound Poisson process 
+
+\[E[X(t)] = \lambda tE(Y_1)\]
+\[Var(X(t)) = \lambda tE(Y_1^2)\]
+
+\newpage 
+\section{Useful References}
+\subsection{Ratio Test}
+For a sequence of positive number $\{a_n\}$
+\begin{itemize}
+    \item If $L = \ds\lim_{n\to\infty}\frac{a_{n+1}}{a_n} < 1$, then $\sum_{n=1}^{\infty}a_n < \infty$ 
+    \item If $L > 1$, then $\sum_{n=1}^{\infty}a_n = \infty$
+    \item If $L = 1$, the test is inconclusive
+\end{itemize}
+\subsection{Stirling's Approximation}
+\[n! \sim \sqrt{2\pi}e^{-n} n^{n+\frac{1}{2}}\]
+
+
+
+\end{document}

@@ -1,0 +1,759 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,enumerate,nicefrac,fancyhdr,hyperref,graphicx,adjustbox,float}
+\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
+\usepackage[left=2.6cm, right=2.6cm, top=1.5cm, includehead, includefoot]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[d]{esvect}
+
+%% commands
+%% useful macros [add to them as needed]
+% sets
+\newcommand{\C}{{\mathbb{C}}} 
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\F}{{\mathbb{F}}}
+
+% bases
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mB}{\mathcal{B}}
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mE}{\mathcal{E}}
+\newcommand{\mL}{\mathcal{L}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mO}{\mathcal{O}}
+\newcommand{\mP}{\mathcal{P}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mT}{\mathcal{T}}
+
+% linear algebra
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\adj}{\operatorname{adj}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\spn}{\operatorname{Span}}
+\newcommand{\proj}{\operatorname{proj}}
+\newcommand{\prp}{\operatorname{perp}}
+\newcommand{\refl}{\operatorname{refl}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\nul}{\operatorname{Null}}
+\newcommand{\nully}{\operatorname{nullity}}
+\newcommand{\range}{\operatorname{Range}}
+\renewcommand{\ker}{\operatorname{Ker}}
+\newcommand{\col}{\operatorname{Col}}
+\newcommand{\row}{\operatorname{Row}}
+\newcommand{\cof}{\operatorname{cof}}
+\newcommand{\Num}{\operatorname{Num}}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\ipb}{\langle \thinspace, \rangle}
+\newcommand{\ip}[2]{\left\langle #1, #2\right\rangle} % inner products
+\newcommand{\M}[2]{M_{#1\times #2}(\F)}
+\newcommand{\RREF}{\operatorname{RREF}}
+\newcommand{\cv}[1]{\begin{bmatrix} #1 \end{bmatrix}}
+\newenvironment{amatrix}[1]{\left[\begin{array}{@{}*{\numexpr#1-1}{c}|c@{}}}{\end{array}\right]}
+\newcommand{\am}[2]{\begin{amatrix}{#1} #2 \end{amatrix}}
+
+% vectors
+\newcommand{\vzero}{\vv{0}}
+\newcommand{\va}{\vv{a}}
+\newcommand{\vb}{\vv{b}}
+\newcommand{\vc}{\vv{c}}
+\newcommand{\vd}{\vv{d}}
+\newcommand{\ve}{\vv{e}}
+\newcommand{\vf}{\vv{f}}
+\newcommand{\vg}{\vv{g}}
+\newcommand{\vh}{\vv{h}}
+\newcommand{\vl}{\vv{\ell}}
+\newcommand{\vm}{\vv{m}}
+\newcommand{\vn}{\vv{n}}
+\newcommand{\vp}{\vv{p}}
+\newcommand{\vq}{\vv{q}}
+\newcommand{\vr}{\vv{r}}
+\newcommand{\vs}{\vv{s}}
+\newcommand{\vt}{\vv{t}}
+\newcommand{\vu}{\vv{u}}
+\newcommand{\vvv}{{\vv{v}}}
+\newcommand{\vw}{\vv{w}}
+\newcommand{\vx}{\vv{x}}
+\newcommand{\vy}{\vv{y}}
+\newcommand{\vz}{\vv{z}}
+
+% display
+\newcommand{\ds}{\displaystyle}
+\newcommand{\qand}{\quad\text{and}}
+\newcommand{\qandq}{\quad\text{and}\quad}
+\newcommand{\hint}{\textbf{Hint: }}
+\newcommand{\tri}{\triangle}
+
+% misc
+\newcommand{\area}{\operatorname{area}}
+\newcommand{\vol}{\operatorname{vol}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\rc}{\red{\checkmark}}
+
+\title{STAT 443 Notes}
+\author{Thomas Liu}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\newpage 
+\section{Introduction to Forecasting, Control and Time Series}
+\subsection{Time Series}
+\subsubsection{Time Series Plot}
+\begin{itemize}
+    \item A time series plot is a scatterplot of the data with time on the x-axis in, typically, equally spaced intervals, and observations on the y-axis 
+    \item For visual clarity adjacent observations are connected by lines 
+    \item The equally spaced intervals can be in units of years, months, days, hours etc and these unites are called the \textbf{period} of the time series 
+\end{itemize}
+\subsubsection{Level, Trend and Seasonality}
+\begin{itemize}
+    \item The \textbf{level} is the local mean of the observations, around which we see random \textbf{noise}
+    \item When the level varies with time we say there is a \textbf{trend}
+    \item A \textbf{seasonal effect} is a systematic and calendar related eeffect which repeats with a given period 
+\end{itemize}
+\subsubsection{Change Point}
+A change point is a time at which at least of two of the following changes: the data generation process, the way that the data is measured, or the way that the observation is defined \\
+Make the forecast very difficult, as we don't know what's going to happen after the change point
+\subsubsection{Stationarity / Non-stationarity}
+Seasonality, trends, non-constant variance and change points are all examples of non-stationarity \\
+Stationarity means that the underlying random process does not change in time 
+\subsection{Simple Statistical Tools}
+\subsubsection{Model with Trend}
+A trend model for the time series $X_t$ is a decomposition 
+\[X_t = m(t) + Y_t\] 
+where $m(t)$ is a function of time $t$ and $Y_t$ has zero mean. Commone examples are 
+\[m(t) = \alpha_0 + \alpha_1 t\]
+and 
+\[m(t) = \alpha_0 + \alpha_1 t + \alpha_2 t^2\]
+where $\alpha_i$ are unknown parameters \\
+We want 
+\begin{enumerate}
+    \item $E(Y_t) = 0$ for all $t$
+    \item $Cov(Y_t, Y_s) = 0$ for all $t \neq s$, $Y_t$ are independent
+    \item $Var(Y_t) = \sigma^2$ for all $t$, $Y_t$ are identically distributed, variance constant 
+    \item $Y_t\sim N(0, \sigma^2)$, $Y_t$ are normally distributed
+\end{enumerate}
+\subsubsection{Model with Seasonal Component}
+A model with seasonal component with period $d$ for $X_t$ is a decomposition 
+\[X_t = s(t) + Y_t\] 
+where $Y_t$ has zero mean but now $s(t)$ is periodic so statisfies $s(t) = s(t+d)$ for all $t$ 
+\subsubsection{Linear Decomposition Model}
+A linear decomposition model for the time series $X_t$ is a decomposition 
+\[X_t=m(t)+s(t)+Y_t\] 
+where $E(Y_t)=0$, $s(t)$ is periodic with period $d$ and for identification reasons we further assume
+\[\sum_{t=1}^{d}s(t)=0\]  
+We can construct multiplicative decomposition model by applying a linear decomposition to $\log(X_t)$ 
+\subsubsection{Identification of a Model}
+A model is not identified if there is more than one way to write the same model. If there is a unique way we say the model is identified 
+\subsubsection*{Example}
+We have two periodic functions $s_1(t)$ and $s_2(t)$ with period $d$ such that $s_1(t)=s_2(t)+1$ 
+\[X_t = s_1(t)+Y_t = s_2(t)+1+Y_t = s_2(t) + Y_t^*\]
+where $Y_t$ has zero mean but $Y_t^*$ has mean $1$ 
+\subsubsection*{Decomposition Using R}
+We can use the following code to decompose a time series $X_t$ in R 
+\begin{verbatim}
+    plot(decompose(birth, type = "additive"))
+\end{verbatim}
+There are two types of decomposition, additive and multiplicative. \\
+Within the output 
+\begin{itemize}
+    \item The top plot (observed) is the original time series $X_t$ 
+    \item The second plot (trend) is the trend component $m(t)$
+    \item The third plot (seasonal) is the seasonal component $s(t)$
+    \item The fourth plot (random) is the residual component $Y_t$ 
+\end{itemize}
+We can have 
+\[X_t = m(t) + s(t) + Y_t\]
+\subsubsection{Simple Moving Average}
+If the period is odd $d=2q+1$ the the smoother is defined on the realisation $x_t$ by 
+\[\hat{m}(t) = \frac{x_{t-q} + x_{t-q+1} + \cdots + x_{t+q}}{d}\]
+and if even $d=2q$ then
+\[\hat{m}(t) = \frac{0.5x_{t-q} + x_{t-q+1} + x_{t-q+2} + \cdots + x_{t+q} + 0.5x_{t+q}}{d}\]
+with $0.5$ weights at the start and end to give a total weight of $d=2q$
+\subsubsection{Simple Moving Average Filter}
+We can estimate the seasonal components. For each $k=1,\cdots,d$ compute the average $w_k$ of 
+\[x_{k+jd} - \hat{m}_{k+jd} | q<k+jd \leq n-q\]
+We then normalise to get 
+\[\hat{s}_k = w_k - \frac{\sum_{1}^{d}w_j}{d}\]   
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Monthly Birth Denmark.jpg}
+\end{figure}
+\subsubsection{Exponential Smoothing}
+\begin{itemize}
+    \item Exponential smoothing can be used for a time series to estimate the level of the process $m_t$ which is assumed slowing varying 
+    \item It should not be used when there is a trend or seasonality 
+    \item Assume that we can observe $x_1,\cdots,x_n$. We select an initial value $\hat{m}(0)$, typically $x_1$ then we update the estimate recursively via the update equation \[\hat{m}(t+1) = \alpha x_{t+1} + (1-\alpha)\hat{m}(t)\] for $\alpha\in(0,1)$ which mixes the current estimate of $\hat{m}(t)$ with the value of $x_{t+1}$ when it is observed 
+    \item The same update can be written in error correcting version as \[\hat{m}(t+1) = \hat{m}(t) + \alpha(x_{t+1} - \hat{m}(t))\] is called the one-step ahead forecast error. The tuning parameter $\alpha$ needs to be selected and this can be done by finding the $\alpha$ which minimises \[\sum_{t=1}^{T-1}(x_{t+1}-\hat{m}_\alpha(t))^2\] over the observed time period $\{1,\cdots,T\}$ and $\hat{m}_\alpha$ is the smoother for a fixed value of $\alpha$
+\end{itemize}
+\subsubsection{Holt-Winters Filtering}
+\begin{itemize}
+    \item The Holt-Winters method genralises exponential smoothing to the case where there is a trend and seasonality 
+    \item We have three terms which depend on time $t$
+    \item The first a level $a$, the second is the trend $b$ and the third is the seasonal component $s$ with period $p$. The mean of the time series at time $t$ is given by \[m(t)=a+bt+s(t)\]    
+    \item The Hole-Winters prediction function for $h$ time periods ahead of current time $t$ is \[\hat{x}(t+h) = \hat{a}(t) + \hat{b}(t)h + \hat{s}(t+h)\]
+    \item The one step error term for this prediction is then defined as \[\hat{e}(t) = x_t - (\hat{a}(t-1) + \hat{b}(t-1) + \hat{s}(t-p))\] 
+    then starting with initial values for $a$, $b$ and $s$ and then update the parameters according to the size of the error over the range of $t$ by using 
+    \[\hat{a}(t) = \hat{a}(t-1) + \hat{b}(t-1) + \alpha\hat{e}(t)\]
+    \[\hat{b}(t) = \hat{b}(t-1) + \alpha\beta\hat{e}(t)\]
+    \[\hat{s}(t) = \hat{s}_{t-p} + \gamma\hat{e}(t)\] 
+    \item The method uses three tuning parameters $\alpha$, $\beta$ and $\gamma$ and these are selected by minimising the sume of squared errors as in the case of exponential smoothing 
+\end{itemize}
+We can use the following code to implement Holt-Winters in R
+\begin{verbatim}
+    birth.hw <- HoltWinters(birth)
+    birth.hw.predict <- predict(birth.hw, n.ahead=12*8)
+\end{verbatim}
+Which predict the next 8 years of monthly births in Denmark
+\begin{figure}[H]
+    \centering 
+    \includegraphics[width=0.8\textwidth]{Holt Winters Denmark.jpg}
+\end{figure}
+\begin{itemize}
+    \item The black line is the original time series $X_t$
+    \item The red line is the fitted Holt-Winters model $m(t)$
+    \item The blue line is the forcasting for the next 8 years, $h=12*8$ months
+\end{itemize}
+\newpage
+
+\section{Regression Methods and Model Buiding Principles}
+\subsection{Linear Regression}
+We can model with time series with a trend using model 
+\[Y_t=\alpha_0+\alpha_1t+\epsilon_t\]    
+where $E(\epsilon_t)=0$ \\
+Using Ordinary Least Squares estimation, we can estimate $\hat{\alpha}_0$ and $\hat{\alpha}_1$ by minimising 
+\[\sum_{t=1}^{n}(Y_t-\hat{\alpha}_0-\hat{\alpha}_1t)^2\]
+We can also estimate the standard deviation 
+\[\hat{\sigma}^2=\frac{1}{n-1}\sum_{t=1}^{n}(Y_t-\hat{\alpha}_0-\hat{\alpha}_1t)^2\]
+We can predict a value $Y_{t^*}$ for some time $t^*$ using the model
+\[\hat{Y}_{t^*}=\hat{\alpha}_0+\hat{\alpha}_1t^*\]
+The uncertainty measeaured by the standard error is 
+\[\sqrt{\hat{\sigma}^2(1+\frac{1}{n}+\frac{(t^*-t)^2}{\sum_{t}(t-\bar{t})^2})}\]
+\subsubsection{Important Lessons}
+\begin{itemize}
+    \item Making a prediction where the new covariate values are far from the values used to fit the data is very risky 
+    \item Goodness of fit only tells the model fits the training data and not much/very little about how model behaves when far from the training data 
+    \item We also used data multiple times during the procedure (model selection, model fitting, prediction, and assessment of prediction uncertainty). This can give rise to both bias in the forecast and poor estimation of the prediction uncertainty 
+    \item We also need to make sure that the errors are not correlated
+\end{itemize}
+\subsection{Prediction in Multivariate Regression}
+We make the following assumptions
+\[E(Y|X)=\beta_0+\sum_{i=1}^{p}\beta_iX_i\]
+\[Y_i=\beta_0+\sum_{i=1}^{p}\beta_iX_i+\epsilon_i\]
+Assume 
+\[\epsilon_i\overset{iid}{\sim}N(0,\sigma^2)\]
+Gauss-Markov conditions \\
+We use the matrix notation
+\begin{align*}
+    X = \begin{bmatrix}
+        1 & x_{11} & x_{12} & \cdots & x_{1p} \\
+        1 & x_{21} & x_{22} & \cdots & x_{2p} \\
+        \vdots & \vdots & \vdots & \ddots & \vdots \\
+        1 & x_{n1} & x_{n2} & \cdots & x_{np}
+    \end{bmatrix} 
+    Y = \begin{bmatrix}
+        y_1 \\
+        y_2 \\
+        \vdots \\
+        y_n 
+    \end{bmatrix} 
+    \beta = \begin{bmatrix}
+        \beta_0 \\
+        \beta_1 \\
+        \vdots \\
+        \beta_p
+    \end{bmatrix} 
+    \epsilon = \begin{bmatrix}
+        \epsilon_1 \\
+        \epsilon_2 \\
+        \vdots \\
+        \epsilon_n     
+    \end{bmatrix}
+\end{align*}
+We write \[Y=X\beta+\epsilon\]
+To find the estimate for $\beta$, we want to minimise the residual sum of squares 
+\[RSS(\beta) = \sum_{i=1}^{N}(y_i - \hat{y}_i)^2 = \sum_{i=1}^{N}(y_i - X_i\beta)^2 = \sum_{i=1}^{N}(y_i - \beta_0 - \sum_{j=1}^{p}\beta_jx_{ij})^2\]
+\subsubsection{OLS Estimation}
+The ordinary least squares estimator is given by
+\[\hat{\beta} = (X^TX)^{-1}X^TY\]
+when $(X^TX)^{-1}$ exists 
+\subsubsection{Variance of OLS}
+The variance-covariance of the sampling distribution of $\hat{\beta}$ is given by
+\[\text{Var}(\hat{\beta}) = \sigma^2(X^TX)^{-1}\]
+\subsubsection{Multicollinearity}
+If two, or more, of the columns of $X$ are highly correlated, we say we have multicollinearity
+\subsubsection{Prediction Interval in Regression}
+If we assume that $(Y_0,X_0)$ is independent of the training set $T=\{(Y_1,X_1),\cdots,(Y_n,X_n)\}$, and assume we have a correctly specified model \\
+Define the point forecast as \[\hat{\mu}=x_0^T\hat{\beta}\]   
+Then a $\alpha\%$ prediction interval is 
+\[\hat{\mu}\pm c_\alpha\hat{\sigma}\sqrt{1+x_0^T(X^TX)^{-1}x_0}\]
+where $c_\alpha$ is the $1-\frac{\alpha}{2}$ quantile from the $t_{N-p-1}$ distribution \\
+The size of the term \[x_0^T(X^TX)^{-1}x_0\] can dominate the uncertainty in the forecast \\
+If $X_TX$ is close to being singular - which is high multicollinearity - then, for certain values of $x_0$ this can be extermely large \\
+If $X_TX$ is close to being singular, meaning small eigenvalue, which means the inverse will be large, causing the prediction interval to be large 
+\subsection{Decision Theory}
+Let $X\in\R^p$ and $Y\in\R$ be vector valued random variables where we are trying to predict $Y$ given the information available in $X$ 
+\subsubsection{Loss Function}
+A loss function $L(Y,f(X))$ is a real-valued function which measures the error in estimating $Y$ with the estimate $f(X)$
+\begin{itemize}
+    \item Typically we assume $L(Y,f(X))\geq 0$ with equality if and only if $y=f(x)$
+    \item Since $L(Y,f(X))$ is a random variable, we may also consider its expected value, $E_{X,Y}[L(Y,f(X))]$, often called the risk
+    \item The expectation is over the joint distribution of $X,Y$
+\end{itemize}
+A commonly used example is the squared error loss, or quadratic loss 
+\[L_{SE}(Y,f(X)) = (Y-f(X))^2\]    
+The expected value is called the mean square error (MSE)
+\[MSE(f) = E_{X,Y}(L_{SE}(Y,f(X))) = E_{X,Y}((Y-f(X))^2)\]   
+\subsubsection*{Theorem}
+If $X$ and $Y$ are two random variables, with $E(Y)=\mu$ and $Var(Y)<\infty$. The function, $f$, which minimises $MSE(f)$, for $X,Y$, is given by the conditional expectation 
+\[f(X)=E_{Y|X}[Y|X]\]
+\begin{itemize}
+    \item Mean square error is not the only possible loss function (easiest mathematically)
+    \item We can alternatively use the absolute loss \[L_{abs}(Y,f(X))=|Y-\hat{Y}(X)|\] where the 'best' esetimate is the conditional median rather than mean 
+\end{itemize}
+\subsection{Model Complexity}
+\subsubsection{Bias-Variance Decomposition}
+Let $T$ be the training set used to estimate $\hat{\beta}=\hat{\beta}(T)$, we now want to estimate the forecasting error for 
+a new set of covariates, $x_0$. Let the forecast be 
+\[\hat{y}_0=x_0^T\hat{\beta}\]    
+If $y_0$ is the actual value we are trying to forecast, and using quadratic loss we evaluate the forecast using 
+\[MSE(x_0)=Bias^2(\hat{y}_0)+Var_T(\hat{y}_0)\]   
+\subsubsection{Expected Prediction Error}
+Suppose we have a regression model of the form 
+\[y=X\beta+\epsilon\quad Var(\epsilon)=\sigma^2\]
+and a training set $T$ from which we have estimated $\hat{\beta}(T)$. We want to assess the performace of the 
+regression model for a new case with explanatary variates $x_0$ in terms of the bias-variance decomposition \\
+Define expected prediction error as 
+\[EPE(x_0)=\sigma^2+Bias^2+Variance\]    
+The first term is called the irreducible error associated with the true model, $f$ and will always be there, the 
+second and third terms depend on the model class we use 
+\subsubsection{Best Subset Regression}
+Best subset regression finds for wach $k\in\{0,1,\cdots,p\}$, the subset which has the smallest residual sum of squares 
+\subsubsection{Forward Step Selection}
+\begin{itemize}
+    \item This is a greedy algorithm which starts with the
+    intercepts then adds the covariate which most
+    decreases the RSS at each stage.
+    \item Rather than explore the whole of the space of possible
+    models it looks for a 'good' yet easy to compute path
+    through them
+\end{itemize}
+\subsubsection{Backward Step Selection}
+\begin{itemize}
+    \item Starts with the full model and deletes the covariate with
+    the smallest z-statistic
+\end{itemize}
+\subsubsection{Akaike Information Criterion (AIC)}
+\begin{itemize}
+    \item The AIC tries to balance goodness of fit of a model and the models complexity 
+    \item Measures the complexity of the model by counting the number of parameters used 
+    \item Defined as \[-2l(\hat{\theta})+2N_p\]    where $l$ is log-likelihood, $\hat{\theta}$ the MLE and $N_p$ the number of parameters in model 
+    \item Usually a smaller value of AIC is preferred 
+\end{itemize}
+\subsubsection{Lasson}
+\begin{itemize}
+    \item The lasso regression estimate is defined by \[\hat{\beta}^{lasso}:=\arg\min_\beta\sum_{i=1}^{N}(y_i-\beta_0+\sum_{j=1}^{p}x_{ij}\beta_j)^2 \quad s.t. \sum_{j=1}^{p}|\beta_j|\leq t\]
+    \item The constraint is on the absolute value of the parameter values not the squares. This can then also be expressed, using Lagrange multipliers \[\hat{\beta}^{lasso}:=\arg\min_\beta\left\{\sum_{i=1}^{N}(y_i-\beta_0+\sum_{j=1}^{p}x_{ij}\beta_j)^2+\lambda\sum_{j=1}^{p}|\beta_j|\right\}\]    
+\end{itemize}
+\newpage 
+
+\section{Stationary Processes}
+\subsection{Introduction}
+\subsubsection{Time Series and Finite Dimensional Distributions}
+\begin{itemize}
+    \item A discrete time series is a set of random variables, $\{X_t\}$, indexed by $t\in T\subseteq \Z$
+    \item For any finite subset of $\{t_1,\cdots,t_n\}\subset T$ the finite dimensional distributions are the joint distributions \[F(x_{t_1},\cdots,x_{t_n})=P(X_{t_1}\leq x_{t_1},\cdots,X_{t_n}\leq x_{t_n})\]
+\end{itemize}
+\subsubsection{White Noise}
+\begin{itemize}
+    \item A sequence of uncorrelated random variables $\{X_t\}$, each with $E(X_t)=0$ and $Var(X_t)=\sigma^2$, for all $t\in T$, is called a white noise process 
+    \item Denoted as $WN(0,\sigma^2)$
+\end{itemize}
+\subsubsection{Gaussian Process}
+\begin{itemize}
+    \item Let $T=\Z$, then $\{X_t\}$ is a discrete Gaussian process if any finite subset $\{X_{t_1},\cdots,X_{t_n}\}$ has an n-dimensional multivariate normal distribution 
+    \item This model is completely determined when the mean and variance-covariance structures are known 
+\end{itemize}
+\subsubsection{Random Walk}
+\begin{itemize}
+    \item Let $Z_t$, $t\in\Z$, be an iid sequence of random variables 
+    \item The series defined by \[X_t=\sum_{i=1}^{t}Z_i\] for $t=1,2,\cdots$ is called a random walk 
+\end{itemize}
+\subsubsection{MA(1) Process}
+\begin{itemize}
+    \item Let $Z_t$, $t\in\Z$, be an iid sequence of $N(0,\sigma^2)$, or more generality $Z_t\sim WN(0,\sigma^2)$, random variables 
+    \item The series defined by \[X_t=Z_t+\sigma Z_{t-1}\]    for all $t$, is called a first order moving average process, and denoted by $MA(1)$
+\end{itemize}
+\subsubsection{AR(1) Process}
+\begin{itemize}
+    \item Let $Z_t$, $t\in\Z$, be an iid sequence of $N(0,\sigma^2)$, or more generality $Z_t\sim WN(0,\sigma^2)$, random variables 
+    \item The series defined by \[X_t=\phi X_{t-1}+Z_t\]   for all $t\in\Z$, is called a first order autoregressive process $AR(1)$
+\end{itemize}
+\subsection{Stationary Processes}
+\subsubsection{The auto-covariance function}
+\begin{itemize}
+    \item If $\{X_t\}$ is a time series with $Var(X_t)<\infty$ for all $t\in T$ 
+    \item The auto-covariance function is defined by \[\gamma(r,s) = Cov(X_r,X_s)\] for $r,s\in T$
+\end{itemize}
+\subsubsection{Stationarity}
+The time series $\{X_t\}_{t\in T}$ is said to be stationary if 
+\begin{itemize}
+    \item $E(|X_t|^2)<\infty$ for all $t\in T$
+    \item $E(X_t)=\mu$ for all $t\in T$
+    \item the auto-covariance function satisfies \[\gamma(r,s)=\gamma(r+t,s+t)\] for all $r,s,r+t,s+t\in T$
+\end{itemize}
+\subsubsection{Strict Stationarity}
+The time series $\{X_t\}_{t\in T}$ is said to be strictly stationary if the finite dimensional vectors $(X_{t_1},\cdots,X_{t_n})$ and $(X_{t_1+h},\cdots,X_{t_n+h})$
+have the same joint distributions for all finite subsets of $T$ and all $h$ where the translation is defined 
+\subsubsection{Properties of Auto-Covariance Function}
+Assume $\gamma(r,s)$ is the auto-covariance function of a stationary process $\{X_t\}$, then the following statements hold 
+\begin{itemize}
+    \item The auto-covariance function can be written as $\gamma(h)=\gamma(r+h, r)$ for all $r$
+    \item $\gamma(0)\geq 0$
+    \item $|\gamma(h)|\leq \gamma(0)$
+    \item the auto-covariance function is even function, $\gamma(h) = \gamma(-h)$
+\end{itemize}
+\subsubsection{Auto-Correlation Function}
+For a stationary process $\{X_t\}$ the auto-correlation function is defined by 
+\[\rho(h) = \dfrac{\gamma(h)}{\gamma(0)}\]   
+\subsection{MA(q) Processes}
+\subsubsection{Backward Shift Operator}
+The backward shift operator $B$ acts on a time series $\{X_t\}$ and is defined as \[BX_t = X_{t-1}\]   
+The difference operator $\Delta$ is also define as $\{X_t\}$ via 
+\[\Delta X_t = X_t-X_{t-1} = (1-B)X_t\] where $1$ here represents the identity operator 
+\begin{itemize}
+    \item We can combine operators as 'polynomials', thus 
+    \[B^0X_t = X_t, BX_t = X_{t-1}, B^2X_t = X_{t-2},\cdots\]
+    \item Define \[\theta(B)=1+\theta_1B+\cdots+\theta_qB^q\]    
+    \item Thus \[\theta(B)X_t = X_t+\theta_1X_{t-1}+\cdots+\theta_qX_{t-q}\]
+\end{itemize}
+\subsubsection{MA(q) Process}
+Let $\{Z_t\}$, $t\in\Z$, be an iid sequence of $N(0,\sigma^2)$, or $Z_t\sim WN(0,\sigma^2)$, random variables \\
+The series defined by 
+\[X_t=\theta(B)Z_t = Z_t+\theta_1Z_{t-1}+\cdots+\theta_qZ_{t-q}\]   
+for all $t$, is called $q$-th order moving average, denoted by $MA(q)$
+\subsubsection*{Theorem}
+Consider a $MA(1)$ process of the form $X_t=Z_t+\theta Z_{t-1}$, for $Z_t\overset{iid}{\sim} N(0,\sigma^2)$, random variables, then we have the following results 
+\begin{itemize}
+    \item the auto-covariance function is defined by 
+    \begin{align*}
+        \gamma(r,s) &= 
+        \begin{cases}
+            \sigma^2(1+\theta^2) & \text{if } r=s \\
+            \sigma^2\theta & \text{if } |r-s|=1 \\
+            0 & \text{otherwise}
+        \end{cases}
+    \end{align*}
+    \item $X_t$ is a stationary process for all values of $\theta$ and $\sigma>0$
+\end{itemize}
+\subsubsection{Moments of MA(q) Process}
+\begin{itemize}
+    \item The mean of an $MA(q)$ process is \[E(X_t) = E(\theta(B)Z_t) = 0\] for all $t$
+    \item The auto-covariance of an $MA(q)$ process is given by 
+    \begin{align*}
+        \gamma(r,s) &=
+        \begin{cases}
+            \sigma^2\sum_{j=0}^{q-|r-s|}\theta_j\theta_{j+|r-s|} &\text{if } |r-s|\leq q \\
+            0 &\text{otherwise}
+        \end{cases}
+    \end{align*}
+    \item All $MA(q)$ processes are stationary 
+\end{itemize}
+\subsection{MA$(\infty)$ Process}
+\begin{itemize}
+    \item Let $Z_t$, $t\in\Z$, be an iid sequence of $N(0,\sigma^2)$, random variables 
+    \item Let $\{\psi_j\}, j=0,1,\cdots$ be a sequence which is absolutely convergent \[\sum_{j=0}^{\infty}|\psi|<\infty\]    
+    \item The process defined by \[X_t=\sum_{j=0}^{\infty}\psi_jZ_{t-j}\]    
+    for all $t$, is called an infinite order moving average, and denoted by $MA(\infty)$
+\end{itemize}
+The $MA(\infty)$ process is stationary with zero mean and auto-covariance function 
+\[\gamma(h) = \sigma^2\sum_{j=-\infty}^{\infty}\psi_j\psi_{j+h}\]    
+\subsubsection{Wold Decomposition Theorem}
+\begin{itemize}
+    \item Any stationary process can be written as the sum of an $MA(\infty)$ process and an independent determininistic process 
+    \item A deteerministic process is any process whose complete realisation is a deterministic function of a finite number of its value 
+\end{itemize}
+\subsection{AR(p) Process}
+\begin{itemize}
+    \item Define the polynomial operator \[\phi(B)=1-\phi_1B-\phi_2B^2-\cdots-\phi_pB^p\]   where $B$ is the backward shift operator 
+    \item The $AR(p)$ process is the process which is the stationary solution to the difference equations \[\phi(B)X_t=Z_t\] for $\{Z_t\}\sim WN(0,\sigma^2)$, when such a solution exists 
+\end{itemize}
+\subsubsection{Causal Process}
+\begin{itemize}
+    \item A causal process $\{X_t\}$ generated by \[\{Z_t\}\sim WN(0,\sigma^2)\] is one where each $X_t$ is only a function of those $Z_s$ where $s\leq t$ 
+    \item It seems intuitive to only consider models where the current value is a function of past values 
+\end{itemize}
+\subsubsection{Existence of Stationary Solution}
+\begin{itemize}
+    \item There exists a stationary solution to $\phi(B)X_t=Z_t$ when, for $z\in\C$, the polynomial \[\phi(z) = 1-\phi_1z-\phi_2z^2-\cdots-\phi_pz^p\] has no roots which which lie on the unit $\{z\in\C|z|=1\}$
+    \item If all roots lie strictly outside the unit circle we say there is a causal solution which can be written as \[X_t=\sum_{j=1}^{\infty}\phi_jZ_{t-j}\]
+\end{itemize}
+\subsubsection{Auto-Covariance Function for AR(p) Process}
+If $X_t$ is a causal, stationary $AR(p)$ process it can be written as \[X_t=\sum_{j=0}^{\infty}\phi_jZ_{t-j}\] and hence its auto-covariance function can be written as \[\gamma(h)=\sigma^2\sum_{j=0}^{\infty}\phi_j\phi_{j+|h|}\]
+\subsubsection{AR(1) Process}
+\begin{itemize}
+    \item Let $\{X_t\}$ be an AR(1) process defined by \[X_t=\phi X_{t-1}+Z_t\] for $Z_t\overset{iid}{\sim} N(0,\sigma^2)$, random variables 
+    \item When the process is stationary an causal then the auto-covariance function is given by \[\gamma(h)=\dfrac{\sigma^2\phi^{|h|}}{1-\phi^2}\]    
+\end{itemize}
+\subsection{Partial ACVF}
+The partial auto-covariance function (PACF) for a stationary process $\{X_t\}$ is defined by
+\begin{align*}
+    \alpha(h) = 
+    \begin{cases}
+        Cor(X_1,X_0) &\text{for }|h| = 1 \\
+        \rho x_hx_0\cdot\{x_{h-1}\cdots x_1\} &\text{for }|h|>1
+    \end{cases}
+\end{align*}
+where $\rho x_hx_0\cdot\{x_{h-1}\cdots x_1\}$ is the partial correlation of $X_h$ and $X_0$ given the set $\{X_{h-1}\cdots X_1\}$
+\subsubsection{Partial Auto-Correlation Function}
+If $\alpha(h)$ is the partial auto-covariance function for a stationary $AR(p)$ process then $\alpha(k)=0$ for $|k|>p$
+\subsection{ARMA(p,q) Process}
+Let $Z_t\sim WN(0,\sigma^2)$, random variables, and define the polynomial operators 
+\[\phi(B)=1-\phi_1B-\phi_2B^2-\cdots-\phi_pB^p\]   
+and 
+\[\theta(B)=1+\theta_1B+\cdots+\theta_qB^q\]   
+where $B$ is the backward shift operator. \\
+The process is the stationary solution to the difference equations 
+\[\phi(B)X_t = \theta(B)Z_t\]    
+when such a solution exists, and we assume that the polynomials $\phi(z)$ and $\theta(z)$ share no common factors 
+\subsubsection{Existence of ARMA Process}
+The ARMA(p,q) process defined by $\phi(B)X_t = \theta(B)Z_t$ has a stationary solution if none of the roots of polynomial $\phi(z)$ lie on the unit circle $|z|=1$. Further, if the roots lie outside the unit circle then there iis a causal stationary solution 
+
+\newpage 
+\section{Model Based Forecasting for Time Series}
+\subsection{Best Linear Predictor}
+\subsubsection{Best Linear Predictor}
+Consider two random variables $X$ and $Y$, with $E(X)=\mu_X$ and $E(Y)=\mu_Y$ and all second moments finite \\
+The best linear predictor is 
+\[\hat{Y} = E(Y) + \frac{Cov(X,Y)}{Var(X)}(X-\mu_X)\]    
+The MSE of the predictor is 
+\[Var(Y)(1-Corr(X,Y)^2)\]    
+Note that if $X$ and $Y$ are uncorrelated, the best linear predictor of $Y$ is 
+\[\hat{Y} = E(Y)\]    
+\subsubsection{Non-Linear Prediction}
+Suppose $X\sim N(0,1)$ and $Y=X^2-1$, then we have 
+\[E(X) = E(Y) = 0\]   
+and the best linear predictor is $\hat{Y}=0$, since $Cov(X,Y)=0$ \\
+The best predictor of $Y$ given $X$ is $X^2-1$, which has MSE of $0$, best linear predictor might not be very good 
+\subsubsection{Best Linear Predictor}
+Suppose we want to predict $Y$ given $X_1$, $X_2$. The best linear predictor is 
+\[\hat{Y} = \alpha_0 + \alpha_1X_2 + \alpha_2X_1\]    
+When covariance is non-singular the best predictor is 
+\[E(Y) + \cv{X_2-\mu X_2 & X_1-\mu X_1}\cv{Var(X_2) & Cov(X_1,X_2)\\Cov(X_1,X_2) & Var(X_1)}^{-1}\cv{Cov(Y,X_2)\\Cov(Y,X_1)}\]
+\subsubsection{Prediction Operator}
+\begin{itemize}
+    \item If $\{X_t\}$ is a stationary time series, with mean $\mu$ and auto-covariance function $\gamma(h)$
+    \item The best linear predictor of $X_{n+h}$ given the set $\{X_n,\cdots,X_1\}$ is
+    \[Pred(X_{n+h}|\{X_n,\cdots,X_1\}) = \mu + \cv{\hat{\alpha_1}&\cdots&\hat{\alpha_n}}\cv{X_n-\mu\\\vdots\\X_1-\mu}\]   
+    \item where $\cv{\hat{\alpha_1}&\cdots&\hat{\alpha_n}}$ satisfies the equation 
+    \[\Gamma\cv{\hat{\alpha_1}\\\vdots\\\hat{\alpha_n}} = \cv{\gamma(h)\\\vdots\\\gamma(h+n-1)}\]
+    \item Here $\Gamma$ is the $n\times n$ matrix with $ij$-th element \[\Gamma_{ij} = \gamma(|i-j|)\]    
+    \item The MSE is given by \[\gamma(0) - \hat{\alpha}^T\gamma_{n,h}\]     
+\end{itemize}
+This theorem shows that for linear prediction for a stationary process $\{X_t\}$ only need 
+\begin{itemize}
+    \item mean of the process \[E(X_t)=\mu\]    
+    \item The auto-correlation function $\gamma(h)$ for a suitable range of $h$
+\end{itemize}
+\subsubsection{Theorem}
+Let $U$ be a random variable, such that $E(U^2)<\infty$, and $W$ an n-dimensional random vector with a 
+finite variance-covariance matrix \[\Gamma=Cov(W,W)\]   
+In terms of mean square error the best linear predictor, $Pred(U|W)$, of $U$ based on $W=(W_1,\cdots,W_n)$ satisfies 
+\begin{enumerate}
+    \item $Pred(U|W)=E(U)+\alpha^T(W-E(W))$ where $\Gamma \alpha = Cov(U,W)$
+    \item $E([U-Pred(U|W)]) = 0$, the estimator is unbiased 
+    \item $E([U-Pred(U|W)]W) = 0$, the zero vector 
+    \item $Pred(\alpha_0+\alpha_1U_1+\alpha_2U_2|W)=\alpha_0+\alpha_1Pred(U_1|W)+\alpha_2Pred(U_2|W)$, the predictor is linear 
+    \item $Pred(W_i|W)=W_i$
+\end{enumerate}
+\subsection{Model Based Approach}
+\begin{itemize}
+    \item Let $x_1,\cdots,x_n$ be observed values of a stationary time series 
+    \item The sample mean is defined by \[\overline{x}=\frac{1}{n}\sum_{t=1}^{n}x_t\]   
+    \item The sample auto-covariance function is defined by 
+    \[\hat(\gamma)(h)=\frac{1}{n}\sum_{t=1}^{n-|h|}(x_{t+|h|}-\overline{x})(x_t-\overline{x})\]  
+    and the sample auto-correlation function is \[\hat{\rho}(h)= \frac{\hat{\gamma}(h)}{\hat{\gamma}(0)}\]     
+\end{itemize}
+\subsection{Estimation}
+\subsubsection{The Likelihood Function}
+The likelihood function for a mean zero, stationary normal, $ARMA(p,q)$ process is 
+\[L(\mu,\phi,\theta,\sigma^2)=\frac{1}{(2\pi)^{n/2}det(\Gamma_n)^{1/2}}\exp\left(-\frac{1}{2}(X-\mu)^T\Gamma_n^{-1}(X-\mu)\right)\]    
+$\Gamma_n$ is variance-covariance matrix for $X$ of the form 
+\[\cv{\gamma(0) & \gamma(1) & \cdots & \gamma(n-1)\\\gamma(1) & \gamma(0) & \cdots & \gamma(n-2)\\\vdots & \vdots & \ddots & \vdots\\\gamma(n-1) & \gamma(n-2) & \cdots & \gamma(0)}\]    
+where $\gamma(h)$ is the auto-covariance function of the process
+\subsubsection{AIC}
+The Akaike information criterion (AIC) is defined as \[AIC=-2 l(\hat{\beta})+2k\]    
+where $l(\hat{\beta})$ is the maximum value of the log-likelihood for a given model, and $k$ is the number of parameters in the model \\
+The AICc corrects for small samples and is given by 
+\[AICc = AIC + \frac{2k(k+1)}{n-k-1}\]   
+For both criteria in a given set of models the preferred model is the one with the minimum criterion value \\
+The idea is to penalise more complicated model and reward simple models, as long as they fit the data 
+\subsection{The Box-Jenkins Approach}
+\subsubsection*{Theorem}
+\begin{itemize}
+    \item Let $U$ be a random variable, such that $E(U^2)<\infty$ 
+    \item $W$ an n-dimensional random vector with a finite variance-covariance matrix \[\Gamma=Cov(W,W)\]    
+    \item In terms of mean square error the best linear predictor, $Pred(U|W)$, of $U$ based on $W=(X_1,\cdots,X_n)$ satisfies the following results 
+    \begin{enumerate}
+        \item $Pred(U|W) = E(U) + a^T(W-E(W))$ where $\Gamma a = Cov(U,W)$
+        \item $E([U-Pred(U|W)]) = 0$, the estimator is unbiased
+        \item $E([U-Pred(U|W)]W) = 0$, the zero vector
+        \item $Pred(\alpha_0+\alpha_1U_1+\alpha_2U_2|W)=\alpha_0+\alpha_1Pred(U_1|W)+\alpha_2Pred(U_2|W)$, the predictor is linear
+        \item $Pred(W_i|W)=W_i$
+    \end{enumerate}
+\end{itemize}
+When a time series $\{X_t\}$ is stationary the best linear predictor $Pred(X_{n+h}|X_1,\cdots,X_n)$ is a function of the mean $\mu$ and auto-covariance function $\gamma(\cdot)$
+\subsubsection{D-th Order Differencing}
+The operator $\nabla^d$ is called the d-th order differencing operator and is defined by 
+\[\nabla^dX_t = (1-B)^dX_t\] 
+\subsubsection{ARIMA Model}
+\begin{itemize}
+    \item Let $d$ be a non-negative integer
+    \item $\{X_t\}$ is an $ARIMA(p,d,q)$ process if \[Y_t=\nabla^dX_t\] is a causal $ARMA(p,q)$ process 
+\end{itemize}
+\subsubsection{Seasonal Components}
+Let $Z_t\sim WN(0,\sigma^2)$ and, for ease of interpretation, let us assume $t$ is recorded on a yearly time scale, but we have one observation per month \\
+Let $\alpha_i$, $i=1,\cdots,12$, be constants associate with the month $(i-1)/12$ such that $\sum_{i=1}^{12}\alpha_i=0$, and define the function $mon(t)$ as the function which 
+returns the month associated with the time $t$ \\
+The process $X_t=\alpha_{mon(t)}+Z_t$ where $\{Z_t\}\sim ARIMA(p,d,q)$ is said to have a seasonal component. It will not be stationary if any of the $\alpha_i$ values are non-zero
+\subsubsection{Lag s Difference}
+The lag $s$ difference operator $B^s$ is defined by \[B^sX_t = X_{t-s}\]    
+The corresponding difference operator $\tri^s$ is defined by \[\tri^s = (1-B^s)\]
+\subsubsection{Seasonal ARIMA Model}
+If $d$ and $D$ are non-negative integers, then $\{X_t\}$ is a seasonal $ARIMA(p,d,q)(P,D,Q)$ process with period $s$ if the differenced series 
+\[Y_t=(1-B)^d(1-B^s)^DX_t\] is a causal $ARMA$ process defined by 
+\[\phi(B)\Phi(B_s)Y_t = \theta(B)\Theta(B^s)Z_t\]
+Here $Z_t\sim WN(0,\sigma^2)$ and 
+\[\phi(z) = 1-\phi_1z - \cdots - \phi_pz^p\] \[\Phi(z) = 1-\Phi_1z - \cdots - \Phi_Pz^P\]
+\[\theta(z) = 1+\theta_1z + \cdots + \theta_qz^q\]
+\[\Theta(z) = 1+\Theta_1z + \cdots + \Theta_Qz^Q\]
+The corresponding process is causal iff all the roots of $\phi(z)$ and $\Phi(z)$ lie outside the unit circle     
+\newpage 
+
+\section{Forecast Evaluation}
+
+
+\newpage
+
+\section{Introduction to Bayesian Forecasting}
+\subsection{Introduction}
+In Bayesian approach all statements about uncertainty must be well-defined probability statements \\
+Forcasting then means computing the conditional probability \[Pr(Y|D=d,M)\]given a model $M$ with parameters $\theta$ \\
+We do this by computing the probability $Pr(Y,\theta|D=d,M)$ annd the marginalising out the random variable $\theta$
+\subsection{Bayesian Inference}
+\begin{itemize}
+    \item We assume that we have a model for the data $f(x|\theta)$
+    \item We want to learn about the vector of parameters $\theta$
+    \item In Bayesian statistics everything is considered a random variable 
+    \item All statements about uncertainty are made using the language and calculus or probability theory 
+    \item $Pr(\theta)$ which we shall call the prior distribution, what we know about $\theta$ before we see the data 
+    \item To see what we know about $\theta$ after we see the data we apply Bayes theorem to give \[Pr(\theta|data) = \frac{Pr(data|\theta)Pr(\theta)}{Pr(data)}\]
+\end{itemize}
+\subsubsection{Predictive Distribution}
+\begin{itemize}
+    \item The solution to a forecasting problem to forecast $X_{new}$ based on an observed sample $X_1,\cdots,X_n$ which comes from a model $f(x|\theta)$ shoudl be the conditional distribution \[P(X_{new}|X_1,\cdots,X_n)\]    
+    \item This is called the predictive distribution 
+    \item It is calculated from the posterior by \[P(X_{new}|X_1,\cdots,X_n) = \int_{\theta}P(X_{new}|\theta)P(\theta|X_1,\cdots,X_n)d\theta\] 
+    \item In words we average over the model according to the posterior belief in the value of $\theta$ given the observed data 
+\end{itemize}
+\subsubsection{Conjugate Priors}
+A conjugate prior is a prior which, for a given model, have the property that the posterior lies in the same 
+functional family as the prior. The updating using the data only changes the parameter values in the conjugate family
+\subsubsection{Markov Chain Monte Carlo (MCMC)}
+\begin{itemize}
+    \item Suppose we have a complex distribution $P(\theta)$ that is known up to a constant
+    \item Rather than integrating directly with the distribution we can compute most statistical functions - such as means, variances, marginal distributions - using a large sample \[\theta_1,\theta_2,\cdots\] 
+    \item To make the sampling fast we don't compute an iid sample 
+    \item Rather construct a dependent Markov chain whose stationary (equilibrium) distribution is proportional to $P(\theta)$ 
+\end{itemize}
+\subsubsection{Building a Predictive Sample}
+If we want do prediction using a posterior for $\theta$ we use a similar idea. We can take a sampl from the predictive distributino in two steps:
+\begin{itemize}
+    \item Draw a sample $\theta^{(i)}$ from the posterior $P(\theta|data)$
+    \item Given $\theta^{(i)}$ draw a prediction from the model $f(y|\theta^{(i)})$ We repeat this, independently fro many different values of $i$ 
+\end{itemize}
+\subsubsection{Bayes and Ridge Regression}
+Suppose we have the model for $Y$ conditionally on $X$ as \[Y_i|X,\beta\sim N(\beta_0+x_i^T\beta, \sigma^2)\]    
+with independent priors $\beta_j\sim N(0,\tau^2)$. Then, with $\tau, \sigma$ assumed known the log-posterior for $\beta$ is given 
+\[\sum_{i=1}^{N}(y_i-\beta_0+\sum_{j=1}^{p}x_{ij}\beta_j)^2 + \lambda\sum_{j=1}^{p}\beta_j^2\]
+which agrees with $RSS(\lambda)$ when $\lambda = \sigma^2 / \tau^2$
+
+\newpage 
+\section{The Kalman Filter}
+\subsection{Introduction}
+\begin{itemize}
+    \item It is a recursive algorithm which can run in real time - same rate that the data is collected
+    \item it is also an efficient algorithm for computing the likelihood function for arima function 
+    \item The Kalman filter allows other sources of information such as known physical laws
+    \item Another important feature is its numerical efficiency
+    \item This allows it to be used in real time control problems such as flying or tracking
+\end{itemize}
+\subsection{State Space Models}
+\subsubsection{State Space Model}
+\begin{itemize}
+    \item Suppose $\{Y_t\}$ is an observed time series with unobserved state process $\{\theta_t\}$ 
+    \item In a state space model the dependence between these is defined byy the graphical shown by 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{state space.png}
+    \end{figure}
+    \item The relationship defines the conditional independence relations:
+    \begin{itemize}
+        \item $\theta_t$ is a Markov chain
+        \item conditionally on $\{\theta_t\}, \{Y_t\}$ are independent
+    \end{itemize}
+    \item The joint distribution of $(Y_1,\cdots,Y_t)|(\theta_1,\cdots,\theta_t)$ is then \[\prod_{i=1}^{t}f(y_t|\theta_t)\]    
+    \item State space models are also called hidden Markov models 
+    \item In a general state space model we have an unobserved state variable at time $s$ and a set of observations $y_1,\cdots,y_t$
+    \item We subdivide problems by 
+    \begin{itemize}
+        \item filtering iss the case where $s=t$
+        \item state prediction is the case where $s>t$
+        \item smoothing is the case where $s<t$
+    \end{itemize}
+\end{itemize}
+Consider a p-dimensional state variable $x_t$ which satisfies the state equation 
+\[x_t = \Sigma x_{t-1} + \Upsilon u_t + w_t\]    
+where $u_t$ are a set of control or input variables and $w_t\overset{iid}{\sim}MVN_p(0,Q)$ \\
+The observed part of the syste is defined via the observation equation \[y_t = A_tx_t + \Gamma u_t + v_t\] where $y$ is q-dimensional and $v_t\overset{iid}{\sim}MVN_q(0,R)$ and the two noise terms, $w,v$ are independent of one another 
+\subsection{Kalman Filter}
+For the state space model, we have 
+\[x_t^{t-1} = \Sigma x_{t-1}^{t-2} + \Upsilon u_t\]   
+This is the prediction part of the method. It has a MSE which satisfies 
+\[P_t^{t-1} = \Sigma P_{t-1}^{t-2}\Sigma^T + Q\]
+While the update is defined by 
+\[x_t^t = x_t^{t-1} + K_t(y_t - A_tx_{t-1}^t - \Gamma u_t)\] It has a MSE which satisfies 
+\[P_t^t = [I - K_tA_t]P_t^{t-1}\]
+where the term $K_t$ is called the Kalman gain and is defined by 
+\[K_t = P_t^{t-1}A_T[A_tP_t^{t-1}A_t^T + R]^{-1}\]
+
+\newpage 
+\section{ARCH, GARCH, and Hidden Markov Models}
+\subsection{ARCH and GARCH}
+\subsubsection{ARCH Model}
+An autoregressive conditional heteroscedasticity (ARCH(p)) model is defined hiercrhically: first define 
+\[X_t = \sigma_tZ_t\]
+where $Z_t\sim N(0,1)$ i.i.d., but treat $\sigma$ as being random such that 
+\[\sigma_t^2 = \alpha_0 + \alpha_1X_{t-1}^2 + \cdots + \alpha_qX_{t-q}^2\]
+$\alpha_0>0$, $\alpha_i\geq0$. So the variance is 'time dependent' - a large value of $X_t$ will result in period of high volatility \\
+We can write $X_t$ as a non-linear function of the previous innovations. It will be stationary and causal 
+\subsubsection{Existence of Stationary Solution}
+For an $ARCH(1)$ model we have, when $|\alpha_1|<1$ there is a unique causal staitionary solution of the equations 
+\[X_t = \sigma_tZ_t\]
+It has the moment structure:
+\[E(X_t) = E(E(X_t|Z_s,s<t)) = 0\]
+\[Var(X_t) = \frac{\alpha_0}{1-\alpha_1}\]
+\[Cov(X_{t+h},X_t) = E(E(X_{t+h}X_t|Z_s,s<t+h))=0\]
+for $h>0 $ 
+\subsubsection{GARCH Model}
+The $GARCH(p,q)$ model is defined by $X_t=\sigma_tZ_t$ where $Z_t\sim N(0,1)$ i.i.d. and
+\[\sigma_t^2 = \alpha_0 + \sum_{i=1}^{p}\alpha_iX_{t-i}^2 + \sum_{i=1}^{q}\beta_i\sigma_{t-i}^2\]
+The $GARCH(1,1)$ model is commonly used, is stationary if 
+\[0<\alpha_1 + \beta_1 < 1\]
+Has uncondtional variance 
+\[\frac{\alpha_0}{1-\alpha_1-\beta_1}\]
+
+
+\end{document}

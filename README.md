@@ -40,3 +40,12 @@ STAT 331 - Applied Linear Models
 
 STAT 332 - Sampling and Experimental Design
 - Designing sample surveys. Probability sampling designs. Estimation with elementary designs. Observational and experimental studies. Blocking, randomization, factorial designs. Analysis of variance. Designing for comparison of groups.
+
+STAT 333 - Stochastic Processes 1
+- This course provides an introduction to stochastic processes, with an emphasis on regenerative phenomena. Topics cover generating functions, conditional probability distributions and conditional expectation, discrete-time Markov chains with a countable state space, limit distributions for ergodic and absorbing chains, applications including the random walk, the gambler's ruin problem, and the Galton-Watson branching process, an introduction to counting processes, connections between the exponential distribution and Poisson process, and non-homogeneous and compound Poisson processes.
+
+STAT 341 - Computational Statistics and Data Analysis
+- A computationally focused approach to statistical reasoning in the context of real data. Functional programming in R and algorithms will be used to define interesting attributes of finite populations and their sampling characteristics. Computational approaches to inductive inference and the assessment of predictive accuracy.
+
+STAT 443 - Forecasting
+- Modelling techniques for forecasting time series data: smoothing methods, regression including penalty/regularization methods, the Box-Jenkins framework, stationary and non-stationary processes, both with and without seasonal effects. Other topics may include: ARCH/GARCH models, Bayesian methods, dynamic linear models, Markov Chain Monte Carlo simulation, spectral density analysis, and periodograms.
